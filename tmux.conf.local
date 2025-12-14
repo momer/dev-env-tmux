@@ -47,6 +47,10 @@ bind | split-window -h -c "#{pane_current_path}"
 bind x kill-pane
 bind X kill-window
 
+# Navigate windows with Ctrl held (prefix + C-n / C-p)
+bind C-n next-window
+bind C-p previous-window
+
 # -----------------------------------------------------------------------------
 # Plugins (managed by tpm)
 # -----------------------------------------------------------------------------
