@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Tmux Configuration Tutorial</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+      :root {
+        --r-heading-font: 'JetBrains Mono', monospace;
+        --r-main-font: 'Inter', sans-serif;
+        --r-main-font-size: 32px;
+      }
+      .reveal h1, .reveal h2, .reveal h3 {
+        text-transform: none;
+      }
+      .reveal h2 {
+        font-size: 1.4em;
+      }
+      .reveal h3 {
+        font-size: 1.1em;
+      }
+      .reveal table {
+        margin: 0 auto;
+        border-collapse: collapse;
+      }
+      .reveal table th,
+      .reveal table td {
+        padding: 0.4em 0.8em;
+        border: 1px solid #555;
+        text-align: left;
+      }
+      .reveal table th {
+        background: #333;
+      }
+      .reveal table tbody tr:last-child td {
+        border-bottom: 1px solid #555;
+      }
+      .reveal code {
+        background: #2d2d2d;
+        padding: 0 0.3em;
+        border-radius: 3px;
+        font-size: 0.9em;
+      }
+      .reveal pre code {
+        padding: 1em;
+        max-height: 500px;
+      }
+      .reveal pre {
+        margin: 0.3rem 0;
+      }
+      .reveal div > pre {
+        margin: 0.3rem 0;
+      }
+      .reveal div > pre code {
+        padding: 0.4em 0.6em;
+      }
+      .key {
+        background: #444;
+        padding: 0 0.4em;
+        border-radius: 3px;
+        font-family: monospace;
+        border: 1px solid #666;
+        margin: 0 0.1em;
+      }
+      .exercise {
+        background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+        padding: 1em;
+        border-radius: 8px;
+        border-left: 4px solid #4caf50;
+      }
+      .tip {
+        background: linear-gradient(135deg, #1a3a4a 0%, #2d4a5d 100%);
+        padding: 0.8em;
+        border-radius: 8px;
+        border-left: 4px solid #2196f3;
+        font-size: 0.9em;
+      }
+      .appendix-note {
+        font-size: 0.7em;
+        color: #888;
+        margin-top: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- ==================== SECTION 01: INTRO ==================== -->
+<section>
+  <h1>Tmux Configuration Tutorial</h1>
+  <p>Terminal multiplexer for your development workflow</p>
+  <aside class="notes">
+    Welcome to the Tmux Configuration Tutorial. This session will cover how to configure and customize tmux to enhance your development workflow. We'll explore keybindings, window management, and practical tips to make tmux work better for you.
+  </aside>
+</section>
+
+<section>
+  <h2>What Is Tmux?</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: center; margin-top: 1.5em;">
+    <div style="font-size: 0.95em; line-height: 1.8;">
+      <ul style="list-style: none; padding: 0;">
+        <li style="margin-bottom: 0.8em;">
+          <strong>Terminal Multiplexer:</strong> Multiple sessions in one terminal window
+        </li>
+        <li style="margin-bottom: 0.8em;">
+          <strong>Session Persistence:</strong> Sessions keep running after SSH disconnect or system reboot (with plugins)
+        </li>
+        <li style="margin-bottom: 0.8em;">
+          <strong>Split Screen:</strong> Multiple panes in one view—divide your workspace instantly
+        </li>
+        <li style="margin-bottom: 0.8em;">
+          <strong>Scriptable & Keyboard-Driven:</strong> Control everything from the keyboard, automate workflows
+        </li>
+      </ul>
+    </div>
+
+    <div style="background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; line-height: 1.6;">
+      <div style="text-align: center; color: #888; margin-bottom: 0.8em; font-size: 0.9em;">Terminal</div>
+      <div style="text-align: center; margin-bottom: 0.8em; color: #888;">|</div>
+      <div style="text-align: center; color: #4caf50; font-weight: bold; margin-bottom: 0.8em;">tmux</div>
+      <div style="text-align: center; margin-bottom: 1em; color: #888;">|</div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8em;">
+        <!-- Session 1 -->
+        <div style="border: 1px solid #555; border-radius: 4px; padding: 0.6em;">
+          <div style="color: #2196f3; font-weight: bold; font-size: 0.8em; margin-bottom: 0.4em;">Session 1</div>
+          <div style="background: #0d0d0d; padding: 0.4em; border-radius: 3px; margin-bottom: 0.3em; font-size: 0.75em; color: #aaa;">
+            <div>Pane 1</div>
+            <div style="color: #666; margin-top: 0.2em;">~/work</div>
+          </div>
+          <div style="background: #0d0d0d; padding: 0.4em; border-radius: 3px; font-size: 0.75em; color: #aaa;">
+            <div>Pane 2</div>
+            <div style="color: #666; margin-top: 0.2em;">~/logs</div>
+          </div>
+        </div>
+
+        <!-- Session 2 -->
+        <div style="border: 1px solid #555; border-radius: 4px; padding: 0.6em;">
+          <div style="color: #2196f3; font-weight: bold; font-size: 0.8em; margin-bottom: 0.4em;">Session 2</div>
+          <div style="background: #0d0d0d; padding: 0.4em; border-radius: 3px; margin-bottom: 0.3em; font-size: 0.75em; color: #aaa;">
+            <div>Pane 1</div>
+            <div style="color: #666; margin-top: 0.2em;">~/projects</div>
+          </div>
+          <div style="background: #0d0d0d; padding: 0.4em; border-radius: 3px; font-size: 0.75em; color: #aaa;">
+            <div>Pane 2</div>
+            <div style="color: #666; margin-top: 0.2em;">~/backup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+    <strong>Why Tmux?</strong> Work seamlessly across SSH sessions, keep your workspace organized, and automate complex terminal workflows.
+  </div>
+
+  <aside class="notes">
+    Introduce the core value proposition of Tmux. Emphasize that it's not just about splitting terminals—it's about persistent, organized workspaces that survive disconnections.
+
+    Key talking points:
+    - Multiplexer = one terminal window contains multiple independent sessions
+    - Persistence is huge for SSH and remote work—your session keeps running even after disconnect
+    - Panes allow you to see multiple things at once without tabbing
+    - Everything is keyboard-driven and scriptable for automation
+
+    The diagram shows the three layers: your physical terminal, the tmux server managing everything, and within it multiple independent sessions each with their own panes.
+  </aside>
+</section>
+
+<section>
+  <h2>What This Config Provides</h2>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+    <div>
+      <h3 style="color: #7aa2f7;">Session Management</h3>
+      <ul style="font-size: 0.85em;">
+        <li>Persistent sessions across reboots</li>
+        <li>Auto-save every 15 minutes</li>
+        <li>Auto-restore on startup</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color: #9ece6a;">Window/Pane Control</h3>
+      <ul style="font-size: 0.85em;">
+        <li>Intuitive splits: <code>|</code> and <code>-</code></li>
+        <li>Vim-style navigation</li>
+        <li>Quick pane/window kills</li>
+      </ul>
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+    <div>
+      <h3 style="color: #bb9af7;">Productivity</h3>
+      <ul style="font-size: 0.85em;">
+        <li>Copy mode with vim navigation</li>
+        <li>Fast text search in scrollback</li>
+        <li>Extensive history retention</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color: #f7768e;">Integration</h3>
+      <ul style="font-size: 0.85em;">
+        <li>oh-my-tmux theme</li>
+        <li>24-bit color support</li>
+        <li>Neovim session restoration</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    This slide shows the four core pillars of the configuration:
+    - Session Management: The most important feature - your tmux sessions persist automatically
+    - Window/Pane Control: Intuitive keybindings that feel natural (| and - for splits mirror the visual layout, vim nav is familiar to many)
+    - Productivity: Enhanced copy mode with vim navigation makes it fast to find and copy text from scrollback
+    - Integration: Leverages oh-my-tmux for theming and includes restoration hooks for Neovim sessions
+  </aside>
+</section>
+
+<section>
+  <h2>Quick Start</h2>
+  <pre><code class="language-bash">git clone [repo] ~/.config/dev-env-tmux
+cd ~/.config/dev-env-tmux
+make install        # Full setup (copies files)
+
+# Alternatives:
+make setup-symlink  # Use symlinks (for version control)
+make setup-minimal  # Skip auto plugin install</code></pre>
+  <h3 style="margin-top: 2rem;">Prerequisites</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; font-size: 0.9em;">
+    <ul>
+      <li><strong>tmux</strong> 3.0+ (via <code>make deps</code>)</li>
+      <li><strong>git</strong> (for tpm and oh-my-tmux)</li>
+      <li><strong>Nerd Font</strong> (optional, for icons)</li>
+    </ul>
+    <div>
+      <strong>Supported platforms:</strong>
+      <ul>
+        <li>macOS (Homebrew)</li>
+        <li>Linux (apt, dnf, pacman)</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    Walk through the installation process step by step. Emphasize that make install is the recommended full setup.
+    Point out that alternatives are available for different workflows—symlinks are good for developers who want version control, minimal for those with custom plugin setups.
+    Prerequisites are light: just need tmux 3.0+, git, and optionally a Nerd Font for proper symbol rendering.
+  </aside>
+</section>
+
+<section>
+  <h2>Architecture</h2>
+  <div style="font-size: 0.85em; text-align: left; max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; margin: 0.8rem 0; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 4px;">
+      <strong style="width: 180px; color: #7aa2f7;">oh-my-tmux</strong>
+      <span>Base configuration framework with sane defaults</span>
+    </div>
+    <div style="display: flex; align-items: center; margin: 0.8rem 0; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 4px;">
+      <strong style="width: 180px; color: #9ece6a;">tpm</strong>
+      <span>Plugin manager (like vim-plug)</span>
+    </div>
+    <div style="display: flex; align-items: center; margin: 0.8rem 0; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 4px;">
+      <strong style="width: 180px; color: #bb9af7;">tmux-sensible</strong>
+      <span>Universal tmux settings</span>
+    </div>
+    <div style="display: flex; align-items: center; margin: 0.8rem 0; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 4px;">
+      <strong style="width: 180px; color: #f7768e;">tmux-resurrect</strong>
+      <span>Save/restore sessions (pane contents, neovim)</span>
+    </div>
+    <div style="display: flex; align-items: center; margin: 0.8rem 0; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 4px;">
+      <strong style="width: 180px; color: #e0af68;">tmux-continuum</strong>
+      <span>Auto-save every 15 min, auto-restore on start</span>
+    </div>
+  </div>
+  <h4 style="margin-top: 1.5rem;">File Locations</h4>
+  <div style="font-size: 0.8em; text-align: center;">
+    <code>~/.tmux.conf</code> <span style="color: #888;">&rarr;</span> oh-my-tmux (do not edit) &nbsp;|&nbsp;
+    <code>~/.tmux.conf.local</code> <span style="color: #888;">&rarr;</span> your customizations &nbsp;|&nbsp;
+    <code>~/.tmux/plugins/</code> <span style="color: #888;">&rarr;</span> installed plugins
+  </div>
+  <aside class="notes">
+    The architecture is built on oh-my-tmux as a foundation.
+    tpm handles plugin installation, just like vim-plug for neovim.
+    tmux-sensible provides sensible defaults that most users want.
+    tmux-resurrect and tmux-continuum work together for session persistence:
+    resurrect saves the session state, continuum automates saving and restoring.
+
+    The key distinction: never edit ~/.tmux.conf directly - all customizations go in ~/.tmux.conf.local
+  </aside>
+</section>
+
+<section>
+  <h2>Key Bindings Preview</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">C-a</span> or <span class="key">C-b</span></td>
+        <td>Prefix</td>
+        <td>Both work (oh-my-tmux)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + |</span></td>
+        <td>Vertical split</td>
+        <td>Custom (intuitive)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + -</span></td>
+        <td>Horizontal split</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + h/j/k/l</span></td>
+        <td>Navigate panes</td>
+        <td>vim-style (oh-my-tmux)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + s</span></td>
+        <td>Session tree</td>
+        <td>Navigate all sessions</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + ?</span></td>
+        <td>List all bindings</td>
+        <td>Your reference</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="tip" style="margin-top: 1.5rem;">
+    <strong>Pro Tip:</strong> Press <span class="key">prefix + ?</span> to list all available keybindings whenever you forget a command!
+  </div>
+  <aside class="notes">
+    Walk through each binding category:
+    - Prefix: Both C-a and C-b work due to oh-my-tmux config. C-a is traditional screen style, C-b is default tmux.
+    - Splits: The custom bindings using | and - are more intuitive than default % and "
+    - Navigation: vim-style hjkl movement makes sense if you're a vim user.
+    - Session tree: Quickly jump between sessions without typing session names.
+    - Help: The ? binding is your reference guide during the presentation.
+  </aside>
+</section>
+
+<section>
+  <h2>oh-my-tmux Extras</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix + e</span></td>
+        <td>Edit local config (<code>~/.tmux.conf.local</code>)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + r</span></td>
+        <td>Reload configuration</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + m</span></td>
+        <td>Toggle mouse mode</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + +</span></td>
+        <td>Maximize pane to new window</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="tip" style="margin-top: 1.5rem;">
+    <strong>Tip:</strong> These bindings are built into oh-my-tmux's base configuration and make tmux much more user-friendly right out of the box.
+  </div>
+  <aside class="notes">
+    These additional keybindings come pre-configured with oh-my-tmux and provide quick access to common tasks.
+    The edit local config binding is particularly useful for customization without touching the main configuration file.
+    The reload binding lets you test changes immediately, and the mouse mode toggle is helpful for accessibility.
+  </aside>
+</section>
+
+        <!-- Future sections will be added here -->
+        <!-- Section 02: Essential Concepts -->
+        <!-- Section 03: Navigation -->
+        <!-- Section 04: Sessions -->
+        <!-- Section 05: Windows & Panes -->
+        <!-- Section 06: Copy Mode -->
+        <!-- Section 07: Plugins -->
+        <!-- Section 08: Session Persistence -->
+        <!-- Section 09: Customization -->
+        <!-- Section 10: Cheat Sheet -->
+
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        transition: 'slide',
+        plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+      });
+    </script>
+  </body>
+</html>

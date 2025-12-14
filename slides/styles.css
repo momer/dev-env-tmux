@@ -1,0 +1,93 @@
+/* Reveal.js custom styles for tutorial slides */
+
+:root {
+  --r-heading-font: 'JetBrains Mono', monospace;
+  --r-main-font: 'Inter', sans-serif;
+  --r-main-font-size: 32px;
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  text-transform: none;
+}
+
+.reveal h2 {
+  font-size: 1.4em;
+}
+
+.reveal h3 {
+  font-size: 1.1em;
+}
+
+.reveal table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.reveal table th,
+.reveal table td {
+  padding: 0.4em 0.8em;
+  border: 1px solid #555;
+  text-align: left;
+}
+
+.reveal table th {
+  background: #333;
+}
+
+.reveal table tbody tr:last-child td {
+  border-bottom: 1px solid #555;
+}
+
+.reveal code {
+  background: #2d2d2d;
+  padding: 0 0.3em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.reveal pre code {
+  padding: 1em;
+  max-height: 500px;
+}
+
+.reveal pre {
+  margin: 0.3rem 0;
+}
+
+.reveal div > pre {
+  margin: 0.3rem 0;
+}
+
+.reveal div > pre code {
+  padding: 0.4em 0.6em;
+}
+
+.key {
+  background: #444;
+  padding: 0 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+  border: 1px solid #666;
+  margin: 0 0.1em;
+}
+
+.exercise {
+  background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+  padding: 1em;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.tip {
+  background: linear-gradient(135deg, #1a3a4a 0%, #2d4a5d 100%);
+  padding: 0.8em;
+  border-radius: 8px;
+  border-left: 4px solid #2196f3;
+  font-size: 0.9em;
+}
+
+.appendix-note {
+  font-size: 0.7em;
+  color: #888;
+  margin-top: 1em;
+}
