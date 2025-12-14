@@ -52,6 +52,28 @@ bind C-n next-window
 bind C-p previous-window
 
 # -----------------------------------------------------------------------------
+# Copy Mode (prefix + [) - Vim Navigation
+# -----------------------------------------------------------------------------
+
+# Use vi mode keys in copy mode
+set-window-option -g mode-keys vi
+
+# Line navigation with j/k
+bind-key -T copy-mode-vi j send-keys -X cursor-down
+bind-key -T copy-mode-vi k send-keys -X cursor-up
+
+# Page navigation with Ctrl+j/k
+bind-key -T copy-mode-vi C-j send-keys -X page-down
+bind-key -T copy-mode-vi C-k send-keys -X page-up
+
+# -----------------------------------------------------------------------------
+# Session Management
+# -----------------------------------------------------------------------------
+
+# Save session and quit (prefix + Q)
+bind Q run-shell '~/.tmux/plugins/tmux-resurrect/scripts/save.sh' \; kill-session
+
+# -----------------------------------------------------------------------------
 # Plugins (managed by tpm)
 # -----------------------------------------------------------------------------
 
