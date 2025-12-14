@@ -6,7 +6,7 @@
 #   make deps             - Install tmux and tpm
 #   make help             - Show all targets
 
-.PHONY: help install setup setup-symlink setup-minimal plugins update update-oh-my-tmux deps deps-tmux deps-tpm status clean
+.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-tpm status clean
 
 # Default target
 help:
@@ -17,6 +17,7 @@ help:
 	@echo "  make setup            Install tmux config (copy files)"
 	@echo "  make setup-symlink    Install tmux config (symlink files)"
 	@echo "  make setup-minimal    Install tmux config without plugins"
+	@echo "  make update-config    Update config only (no backup prompt)"
 	@echo "  make plugins          Install/update tmux plugins via tpm"
 	@echo "  make update           Update tmux plugins"
 	@echo "  make update-oh-my-tmux  Update oh-my-tmux to latest"
@@ -48,6 +49,12 @@ setup-symlink:
 # Setup tmux configuration without plugins
 setup-minimal:
 	./setup.sh --no-plugins
+
+# Update config only (direct copy, no full setup)
+update-config:
+	@cp tmux.conf.local ~/.tmux.conf.local
+	@echo "Updated ~/.tmux.conf.local"
+	@echo "Run 'tmux source-file ~/.tmux.conf' or prefix + r to reload"
 
 # Install/update tmux plugins via tpm
 plugins:

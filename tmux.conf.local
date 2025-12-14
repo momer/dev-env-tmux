@@ -47,9 +47,12 @@ bind | split-window -h -c "#{pane_current_path}"
 bind x kill-pane
 bind X kill-window
 
-# Navigate windows with Ctrl held (prefix + C-n / C-p)
-bind C-n next-window
-bind C-p previous-window
+# Navigate windows (prefix + n / p)
+bind n next-window
+bind p previous-window
+
+# Send C-a to shell for beginning of line (prefix + a)
+bind a send-keys C-a
 
 # -----------------------------------------------------------------------------
 # Copy Mode (prefix + [) - Vim Navigation
@@ -65,6 +68,10 @@ bind-key -T copy-mode-vi k send-keys -X cursor-up
 # Page navigation with Ctrl+j/k
 bind-key -T copy-mode-vi C-j send-keys -X page-down
 bind-key -T copy-mode-vi C-k send-keys -X page-up
+
+# Selection and yank (tmux-yank handles clipboard)
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
 
 # -----------------------------------------------------------------------------
 # Session Management
@@ -82,6 +89,7 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
 
 # Resurrect settings
 set -g @resurrect-capture-pane-contents 'on'
