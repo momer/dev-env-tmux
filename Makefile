@@ -6,28 +6,29 @@
 #   make deps             - Install tmux and tpm
 #   make help             - Show all targets
 
-.PHONY: help install setup setup-symlink setup-minimal plugins update deps deps-tmux deps-tpm status clean
+.PHONY: help install setup setup-symlink setup-minimal plugins update update-oh-my-tmux deps deps-tmux deps-tpm status clean
 
 # Default target
 help:
-	@echo "Tmux Development Environment"
+	@echo "Tmux Development Environment (Oh My Tmux)"
 	@echo ""
 	@echo "Setup targets:"
-	@echo "  make install        Full setup: tmux config + dependencies"
-	@echo "  make setup          Install tmux config (copy files)"
-	@echo "  make setup-symlink  Install tmux config (symlink files)"
-	@echo "  make setup-minimal  Install tmux config without plugins"
-	@echo "  make plugins        Install/update tmux plugins via tpm"
-	@echo "  make update         Update tmux plugins"
+	@echo "  make install          Full setup: tmux config + dependencies"
+	@echo "  make setup            Install tmux config (copy files)"
+	@echo "  make setup-symlink    Install tmux config (symlink files)"
+	@echo "  make setup-minimal    Install tmux config without plugins"
+	@echo "  make plugins          Install/update tmux plugins via tpm"
+	@echo "  make update           Update tmux plugins"
+	@echo "  make update-oh-my-tmux  Update oh-my-tmux to latest"
 	@echo ""
 	@echo "Dependency targets:"
-	@echo "  make deps           Install all dependencies (tmux + tpm)"
-	@echo "  make deps-tmux      Install tmux"
-	@echo "  make deps-tpm       Install tmux plugin manager"
+	@echo "  make deps             Install all dependencies (tmux + tpm)"
+	@echo "  make deps-tmux        Install tmux"
+	@echo "  make deps-tpm         Install tmux plugin manager"
 	@echo ""
 	@echo "Other targets:"
-	@echo "  make status         Check installation status"
-	@echo "  make clean          Remove tmux config (keeps backups)"
+	@echo "  make status           Check installation status"
+	@echo "  make clean            Remove tmux config (keeps backups)"
 
 # Full installation
 install: setup
@@ -64,6 +65,14 @@ update:
 		echo "tpm not installed. Run 'make deps-tpm' first."; \
 	fi
 
+# Update oh-my-tmux
+update-oh-my-tmux:
+	@if [ -d ~/.tmux/oh-my-tmux ]; then \
+		cd ~/.tmux/oh-my-tmux && git pull; \
+	else \
+		echo "oh-my-tmux not installed. Run 'make setup' first."; \
+	fi
+
 # Install all dependencies
 deps: deps-tmux deps-tpm
 	@$(MAKE) status
@@ -83,7 +92,9 @@ status:
 # Clean up (remove installed config, keeps backups)
 clean:
 	@echo "Removing tmux configuration..."
-	@[ -f ~/.tmux.conf ] && rm -- ~/.tmux.conf || true
-	@echo "Removed ~/.tmux.conf"
-	@echo "Note: ~/.tmux (plugins) preserved"
+	@[ -L ~/.tmux.conf ] && rm -- ~/.tmux.conf || true
+	@[ -f ~/.tmux.conf.local ] && rm -- ~/.tmux.conf.local || true
+	@[ -L ~/.tmux.conf.local ] && rm -- ~/.tmux.conf.local || true
+	@echo "Removed ~/.tmux.conf and ~/.tmux.conf.local"
+	@echo "Note: ~/.tmux (plugins, oh-my-tmux) preserved"
 	@echo "Note: Backup files (*.backup.*) preserved"

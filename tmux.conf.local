@@ -1,0 +1,72 @@
+# =============================================================================
+# Oh My Tmux - Local Configuration
+# =============================================================================
+# This file is sourced by oh-my-tmux after the main config.
+# Customize settings here without modifying the base config.
+
+# -----------------------------------------------------------------------------
+# Oh My Tmux Settings
+# -----------------------------------------------------------------------------
+
+# Use powerline symbols (requires a Nerd Font or Powerline font)
+# tmux_conf_theme_left_separator_main='\uE0B0'
+# tmux_conf_theme_left_separator_sub='\uE0B1'
+# tmux_conf_theme_right_separator_main='\uE0B2'
+# tmux_conf_theme_right_separator_sub='\uE0B3'
+
+# Enable 24-bit color support
+tmux_conf_24b_colour=true
+
+# Start new session if no existing session
+# tmux_conf_new_session_prompt=false
+
+# -----------------------------------------------------------------------------
+# Status Bar Customization
+# -----------------------------------------------------------------------------
+
+# Status bar position (top/bottom)
+# tmux_conf_theme_status_position='bottom'
+
+# Clock style (12/24)
+tmux_conf_theme_clock_style='24'
+
+# Show battery in status bar
+# tmux_conf_theme_battery_status=true
+
+# Show hostname (useful for SSH)
+# tmux_conf_theme_hostname=true
+
+# -----------------------------------------------------------------------------
+# Additional Key Bindings
+# -----------------------------------------------------------------------------
+
+# Split panes using | and - (in addition to oh-my-tmux's _ and -)
+bind | split-window -h -c "#{pane_current_path}"
+
+# Kill pane/window without confirmation
+bind x kill-pane
+bind X kill-window
+
+# -----------------------------------------------------------------------------
+# Plugins (managed by tpm)
+# -----------------------------------------------------------------------------
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# Resurrect settings
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'
+
+# Continuum settings
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'
+
+# -----------------------------------------------------------------------------
+# Initialize TPM
+# -----------------------------------------------------------------------------
+# Keep this line at the very bottom of tmux.conf.local
+run '~/.tmux/plugins/tpm/tpm'

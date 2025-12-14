@@ -109,6 +109,14 @@ check_status() {
     fi
     echo ""
 
+    echo "Oh My Tmux:"
+    if [[ -d "$HOME/.tmux/oh-my-tmux" ]]; then
+        echo "  ✓ oh-my-tmux installed"
+    else
+        echo "  ✗ oh-my-tmux not installed"
+    fi
+    echo ""
+
     echo "Tmux Plugin Manager:"
     if [[ -d "$HOME/.tmux/plugins/tpm" ]]; then
         echo "  ✓ tpm installed"
@@ -122,6 +130,11 @@ check_status() {
         echo "  ✓ ~/.tmux.conf exists"
     else
         echo "  ✗ ~/.tmux.conf not found"
+    fi
+    if [[ -f "$HOME/.tmux.conf.local" ]]; then
+        echo "  ✓ ~/.tmux.conf.local exists"
+    else
+        echo "  ✗ ~/.tmux.conf.local not found"
     fi
     echo ""
 
