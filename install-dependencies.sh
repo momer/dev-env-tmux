@@ -95,6 +95,29 @@ install_tpm() {
     echo "  2. Press prefix + I (capital i)"
 }
 
+# Install fzf (required for tmux-fzf plugin)
+install_fzf() {
+    info "Installing fzf..."
+
+    if check_cmd fzf; then
+        info "fzf is already installed: $(fzf --version | head -1)"
+        return
+    fi
+
+    if is_macos && check_cmd brew; then
+        brew install fzf
+    elif is_linux && check_cmd apt; then
+        sudo apt update && sudo apt install -y fzf
+    elif is_linux && check_cmd dnf; then
+        sudo dnf install -y fzf
+    elif is_linux && check_cmd pacman; then
+        sudo pacman -S --noconfirm fzf
+    else
+        warn "No supported package manager found. Install fzf manually:"
+        warn "  https://github.com/junegunn/fzf#installation"
+    fi
+}
+
 # Check status of all tools
 check_status() {
     echo ""
@@ -106,6 +129,14 @@ check_status() {
         echo "  ✓ tmux $(tmux -V | cut -d' ' -f2)"
     else
         echo "  ✗ tmux"
+    fi
+    echo ""
+
+    echo "Fzf:"
+    if check_cmd fzf; then
+        echo "  ✓ fzf $(fzf --version | head -1)"
+    else
+        echo "  ✗ fzf (required for tmux-fzf plugin)"
     fi
     echo ""
 
@@ -167,21 +198,27 @@ main() {
         tpm)
             install_tpm
             ;;
+        fzf)
+            install_fzf
+            ;;
         status|check)
             check_status
             ;;
         all)
             install_tmux
             echo ""
+            install_fzf
+            echo ""
             install_tpm
             echo ""
             check_status
             ;;
         *)
-            echo "Usage: $0 [tmux|tpm|status|all]"
+            echo "Usage: $0 [tmux|fzf|tpm|status|all]"
             echo ""
             echo "Options:"
             echo "  tmux     Install tmux"
+            echo "  fzf      Install fzf (for tmux-fzf plugin)"
             echo "  tpm      Install tmux plugin manager"
             echo "  status   Check installation status"
             echo "  all      Install all dependencies (default)"

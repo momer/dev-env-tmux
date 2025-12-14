@@ -3,10 +3,10 @@
 # Usage:
 #   make install          - Full setup (tmux config + dependencies)
 #   make setup            - Install tmux config only
-#   make deps             - Install tmux and tpm
+#   make deps             - Install tmux, fzf, and tpm
 #   make help             - Show all targets
 
-.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-tpm status clean
+.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-fzf deps-tpm status clean
 
 # Default target
 help:
@@ -23,8 +23,9 @@ help:
 	@echo "  make update-oh-my-tmux  Update oh-my-tmux to latest"
 	@echo ""
 	@echo "Dependency targets:"
-	@echo "  make deps             Install all dependencies (tmux + tpm)"
+	@echo "  make deps             Install all dependencies (tmux + fzf + tpm)"
 	@echo "  make deps-tmux        Install tmux"
+	@echo "  make deps-fzf         Install fzf (for tmux-fzf plugin)"
 	@echo "  make deps-tpm         Install tmux plugin manager"
 	@echo ""
 	@echo "Other targets:"
@@ -81,12 +82,16 @@ update-oh-my-tmux:
 	fi
 
 # Install all dependencies
-deps: deps-tmux deps-tpm
+deps: deps-tmux deps-fzf deps-tpm
 	@$(MAKE) status
 
 # Tmux
 deps-tmux:
 	./install-dependencies.sh tmux
+
+# Fzf (for tmux-fzf plugin)
+deps-fzf:
+	./install-dependencies.sh fzf
 
 # Tmux Plugin Manager
 deps-tpm:

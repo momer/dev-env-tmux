@@ -51,6 +51,9 @@ bind X kill-window
 bind n next-window
 bind p previous-window
 
+# Quick window switch with fzf preview (prefix + s)
+bind s run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/window.sh switch"
+
 # Send C-a to shell for beginning of line (prefix + a)
 bind a send-keys C-a
 
@@ -90,6 +93,14 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'sainnhe/tmux-fzf'
+
+# tmux-fzf settings
+TMUX_FZF_LAUNCH_KEY="f"
+set-environment -g TMUX_FZF_ORDER "session|window|pane|command|keybinding"
+set-environment -g TMUX_FZF_PREVIEW "1"
+set-environment -g TMUX_FZF_PREVIEW_FOLLOW "1"
+set-environment -g TMUX_FZF_OPTIONS "-p -w 90% -h 80% -m --preview-window=down,60% --bind=ctrl-j:down,ctrl-k:up,ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
 
 # Resurrect settings
 set -g @resurrect-capture-pane-contents 'on'
