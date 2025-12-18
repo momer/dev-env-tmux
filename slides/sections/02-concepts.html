@@ -1,0 +1,327 @@
+<!-- ==================== SECTION 02: ESSENTIAL CONCEPTS ==================== -->
+<section>
+  <h2>Prefix Key</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div style="font-size: 0.9em;">
+      <p style="margin-bottom: 1.2em; line-height: 1.6;">
+        All tmux commands start with a <strong>prefix key</strong>. This config supports both:
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 1.5em; margin: 1.5em 0;">
+        <div style="text-align: center;">
+          <div style="font-size: 1.8em; margin-bottom: 0.3em;">
+            <span class="key">Ctrl-a</span>
+          </div>
+          <div style="font-size: 0.75em; color: #888;">oh-my-tmux default</div>
+        </div>
+        <div style="font-size: 1.8em; color: #666; align-self: center;">or</div>
+        <div style="text-align: center;">
+          <div style="font-size: 1.8em; margin-bottom: 0.3em;">
+            <span class="key">Ctrl-b</span>
+          </div>
+          <div style="font-size: 0.75em; color: #888;">tmux default</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 1.5em; font-size: 0.85em; line-height: 1.6;">
+        Press the prefix key, release it, then press the command key.
+      </p>
+
+      <div style="background: #1a1a1a; padding: 1em; border-radius: 8px; border: 1px solid #444; margin-top: 1em; font-size: 0.85em; text-align: center;">
+        <span class="key">Ctrl-a</span>
+        <span style="margin: 0 0.5em; color: #666;">→</span>
+        <span class="key">c</span>
+        <div style="margin-top: 0.8em; color: #4caf50; font-size: 0.9em;">Creates a new window</div>
+      </div>
+    </div>
+
+    <div style="font-size: 0.85em;">
+      <div class="tip" style="margin-bottom: 1.5em;">
+        <strong>Tip:</strong> Pick one prefix and build muscle memory. Most people prefer <span class="key">Ctrl-a</span> since it's easier to reach.
+      </div>
+
+      <h3 style="font-size: 1em; margin-bottom: 0.8em; color: #2196f3;">Special Case</h3>
+      <p style="line-height: 1.6; margin-bottom: 0.6em;">
+        Need to send <span class="key">Ctrl-a</span> to the shell (e.g., jump to beginning of line)?
+      </p>
+      <div style="background: #1a1a1a; padding: 0.8em; border-radius: 8px; border: 1px solid #444; text-align: center;">
+        <span class="key">prefix</span> + <span class="key">a</span>
+      </div>
+      <p style="margin-top: 0.6em; font-size: 0.8em; color: #888; line-height: 1.5;">
+        Sends actual <code>C-a</code> to the application
+      </p>
+
+      <div style="margin-top: 1.5em; padding: 1em; background: #1a1a1a; border-radius: 8px; border: 1px solid #444;">
+        <div style="font-size: 0.85em; margin-bottom: 0.5em; color: #888;">Command Flow:</div>
+        <div style="text-align: center; font-family: monospace; line-height: 2;">
+          <div><span class="key">Ctrl-a</span></div>
+          <div style="color: #666;">↓</div>
+          <div style="color: #4caf50;">Tmux listens</div>
+          <div style="color: #666;">↓</div>
+          <div><span class="key">command key</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    The prefix key is fundamental to tmux. Think of it as a signal that says "hey tmux, this next keystroke is for you, not the shell."
+
+    This configuration supports both Ctrl-a and Ctrl-b, which is nice for flexibility. Ctrl-a is generally preferred because it's easier to reach on most keyboards—you don't need to stretch as far. However, Ctrl-a conflicts with the readline keybinding for "beginning of line" in bash and other shells. That's why we have prefix + a to send the actual Ctrl-a to the shell when you need it.
+
+    The key point: pick one and stick with it. Muscle memory is everything with tmux. Within a week of daily use, the prefix will become second nature.
+  </aside>
+</section>
+
+<section>
+  <h2>The Mental Model</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 3em; align-items: start; margin-top: 2em;">
+    <!-- Left side: Hierarchy text -->
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444;">
+      <pre style="margin: 0; line-height: 1.8; color: #e0e0e0;"><strong style="color: #7aa2f7;">Server</strong>
+  └── <strong style="color: #9ece6a;">Session</strong> (work)
+        ├── <strong style="color: #bb9af7;">Window</strong> 0: editor
+        │     ├── <strong style="color: #f7768e;">Pane</strong> 1
+        │     └── <strong style="color: #f7768e;">Pane</strong> 2
+        ├── <strong style="color: #bb9af7;">Window</strong> 1: tests
+        │     └── <strong style="color: #f7768e;">Pane</strong> 1
+        └── <strong style="color: #bb9af7;">Window</strong> 2: logs
+              └── <strong style="color: #f7768e;">Pane</strong> 1</pre>
+    </div>
+
+    <!-- Right side: Explanations -->
+    <div style="font-size: 0.9em;">
+      <div style="margin-bottom: 1.2em; padding: 0.8em; background: rgba(122, 162, 247, 0.1); border-left: 3px solid #7aa2f7; border-radius: 4px;">
+        <strong style="color: #7aa2f7;">Server</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Runs in background, manages everything</span>
+      </div>
+
+      <div style="margin-bottom: 1.2em; padding: 0.8em; background: rgba(158, 206, 106, 0.1); border-left: 3px solid #9ece6a; border-radius: 4px;">
+        <strong style="color: #9ece6a;">Session</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Named collection of windows (e.g., "work", "personal")<br>Persists after detach</span>
+      </div>
+
+      <div style="margin-bottom: 1.2em; padding: 0.8em; background: rgba(187, 154, 247, 0.1); border-left: 3px solid #bb9af7; border-radius: 4px;">
+        <strong style="color: #bb9af7;">Window</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Full terminal screen, numbered 0, 1, 2...<br>Like browser tabs</span>
+      </div>
+
+      <div style="padding: 0.8em; background: rgba(247, 118, 142, 0.1); border-left: 3px solid #f7768e; border-radius: 4px;">
+        <strong style="color: #f7768e;">Pane</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Subdivision of a window<br>Split vertically or horizontally</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 2em; font-size: 0.9em;">
+    <strong>Tip:</strong> Think of Sessions as projects, Windows as tasks within a project, and Panes as different views of the same task.
+  </div>
+
+  <aside class="notes">
+    This is the fundamental mental model for understanding tmux's hierarchy.
+
+    Walk through the hierarchy from top to bottom:
+    - Server: The tmux server runs in the background and manages all sessions. You rarely interact with it directly.
+    - Session: A named workspace that contains windows. Sessions persist after you detach, which is the key to tmux's power.
+    - Window: Like tabs in a browser. Each window is a full terminal screen. You switch between windows to focus on different tasks.
+    - Pane: Splits within a single window. Useful for viewing multiple things simultaneously (code editor on left, terminal on right, logs at bottom).
+
+    Real-world example: You might have a "work" session with windows for editor, tests, and logs. Within the editor window, you might split panes to show code and documentation side-by-side.
+
+    The color coding helps distinguish the hierarchy levels visually.
+  </aside>
+</section>
+
+<section>
+  <h2>Keybinding Discovery</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Keybinding/Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix + ?</span></td>
+        <td>List all keybindings (searchable)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + :</span></td>
+        <td>Command prompt (run tmux commands)</td>
+      </tr>
+      <tr>
+        <td><code>tmux list-keys</code></td>
+        <td>List all bindings from shell</td>
+      </tr>
+      <tr>
+        <td><code>tmux show-options -g</code></td>
+        <td>Show global options</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> In the keybinding list, press <span class="key">/</span> to search, <span class="key">q</span> to exit
+  </div>
+
+  <aside class="notes">
+    The question mark binding is invaluable for discovering keybindings. The list is searchable using forward slash, similar to vim or less. The command prompt lets you run any tmux command without leaving your session. From the shell, list-keys and show-options provide programmatic access to your configuration.
+  </aside>
+</section>
+
+<section>
+  <h2>Modes in Tmux</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Mode</th>
+        <th>Purpose</th>
+        <th>Enter</th>
+        <th>Exit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Normal</strong></td>
+        <td>Default mode, receive prefix commands</td>
+        <td>Default</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td><strong>Copy</strong></td>
+        <td>Navigate/search/copy scrollback buffer</td>
+        <td><span class="key">prefix + [</span></td>
+        <td><span class="key">q</span></td>
+      </tr>
+      <tr>
+        <td><strong>Command</strong></td>
+        <td>Run tmux commands directly</td>
+        <td><span class="key">prefix + :</span></td>
+        <td><span class="key">Enter</span> or <span class="key">Escape</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <aside class="notes">
+    Tmux has three primary modes. Normal mode is the default where you use prefix commands. Copy mode lets you scroll through history, search, and copy text. Command mode is like Vim's command line where you can enter tmux commands directly.
+  </aside>
+</section>
+
+<section>
+  <h2>Anatomy of a Keybinding</h2>
+
+  <div style="margin: 2em 0;">
+    <h3>Example Breakdown</h3>
+    <p style="font-size: 1.2em;">
+      <code>prefix + C-s</code> means:
+      <br>
+      <span style="color: #e74c3c;">Press prefix key</span>, then <span style="color: #3498db;">Ctrl + s</span>
+    </p>
+  </div>
+
+  <div style="margin: 2em 0; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <h3>Notation Guide</h3>
+    <pre><code>C-x    = Ctrl + x
+M-x    = Alt + x (Meta)
+S-x    = Shift + x
+prefix = Ctrl-a or Ctrl-b</code></pre>
+  </div>
+
+  <div style="margin: 2em 0;">
+    <h3>Common Patterns</h3>
+    <table style="font-size: 0.8em;">
+      <thead>
+        <tr>
+          <th>Notation</th>
+          <th>Meaning</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>prefix + c</code></td>
+          <td>prefix, then <span class="key">c</span></td>
+          <td>New window</td>
+        </tr>
+        <tr>
+          <td><code>prefix + C-s</code></td>
+          <td>prefix, then <span class="key">Ctrl-s</span></td>
+          <td>Save session</td>
+        </tr>
+        <tr>
+          <td><code>prefix + I</code></td>
+          <td>prefix, then <span class="key">Shift-i</span></td>
+          <td>Install plugins</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <aside class="notes">
+    The prefix key is pressed first and released before the next key.
+    This is different from Ctrl-s where both keys are held together.
+    The notation C-x, M-x, S-x is standard across Unix documentation.
+    Default prefix is Ctrl-b, but many users remap to Ctrl-a.
+  </aside>
+</section>
+
+<section>
+  <h2>Config Architecture</h2>
+
+  <div class="config-flow" style="display: flex; flex-direction: column; align-items: center; gap: 2rem; margin: 2rem 0;">
+
+    <div style="background: #2d2d2d; padding: 1.5rem 2rem; border-radius: 8px; border: 2px solid #e74c3c; min-width: 400px;">
+      <div style="font-size: 1.2em; margin-bottom: 0.5rem;">
+        <code>~/.tmux.conf</code>
+      </div>
+      <div style="color: #e74c3c; font-weight: bold;">← oh-my-tmux base (DON'T edit)</div>
+    </div>
+
+    <div style="font-size: 2em; color: #3498db;">↓ sources</div>
+
+    <div style="background: #2d2d2d; padding: 1.5rem 2rem; border-radius: 8px; border: 2px solid #2ecc71; min-width: 400px;">
+      <div style="font-size: 1.2em; margin-bottom: 0.5rem;">
+        <code>~/.tmux.conf.local</code>
+      </div>
+      <div style="color: #2ecc71; font-weight: bold;">← Your customizations (EDIT THIS)</div>
+    </div>
+
+    <div style="font-size: 2em; color: #3498db;">↓ loads</div>
+
+    <div style="background: #2d2d2d; padding: 1.5rem 2rem; border-radius: 8px; border: 2px solid #95a5a6; min-width: 400px;">
+      <div style="font-size: 1.2em; margin-bottom: 0.5rem;">
+        <code>~/.tmux/plugins/</code>
+      </div>
+      <div style="color: #95a5a6; font-weight: bold;">← Plugin files (managed by tpm)</div>
+    </div>
+
+  </div>
+
+  <aside class="notes">
+    The config architecture follows a three-tier hierarchy. At the top is .tmux.conf from oh-my-tmux - never edit this file directly as it gets overwritten on updates. This sources .tmux.conf.local, which is where all your customizations should go. Finally, .tmux.conf.local loads plugins from the .tmux/plugins directory, which are managed by TPM. Always edit .tmux.conf.local, not the base .tmux.conf file.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 1: Discovery</h2>
+
+  <div class="exercise">
+    <h3>Explore Tmux Internals</h3>
+    <ol>
+      <li>Start tmux: <code>tmux</code></li>
+      <li>View all keybindings: <span class="key">Ctrl-a ?</span></li>
+      <li>Search for "split" by pressing <span class="key">/</span></li>
+      <li>Exit help with <span class="key">q</span></li>
+      <li>Open command mode: <span class="key">Ctrl-a :</span></li>
+      <li>View global options: <code>show-options -g</code></li>
+      <li>Browse sessions: <span class="key">Ctrl-a s</span></li>
+    </ol>
+  </div>
+
+  <aside class="notes">
+    Walk through each step with the audience. Emphasize that the help system is searchable and comprehensive. Show how command mode gives direct access to tmux internals. The session tree view demonstrates tmux's organizational hierarchy.
+  </aside>
+</section>

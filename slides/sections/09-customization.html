@@ -1,0 +1,434 @@
+<!-- ==================== SECTION 09: CUSTOMIZATION ==================== -->
+<section>
+  <h2>Config Files</h2>
+
+  <div style="margin-top: 2em;">
+    <p style="font-size: 0.9em; margin-bottom: 2em; line-height: 1.6; color: #ccc;">
+      oh-my-tmux uses a layered configuration approach that separates the framework from your customizations:
+    </p>
+
+    <div style="background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444; margin-bottom: 2em;">
+      <table style="font-size: 0.9em;">
+        <thead>
+          <tr>
+            <th style="text-align: left; width: 40%;">File</th>
+            <th style="text-align: left;">Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>~/.tmux.conf</code></td>
+            <td>Symlink to oh-my-tmux main config</td>
+          </tr>
+          <tr>
+            <td><code style="color: #4caf50;">~/.tmux.conf.local</code></td>
+            <td><strong style="color: #4caf50;">YOUR customizations</strong></td>
+          </tr>
+          <tr>
+            <td><code>~/.tmux/oh-my-tmux/</code></td>
+            <td>oh-my-tmux repository</td>
+          </tr>
+          <tr>
+            <td><code>~/.tmux/plugins/</code></td>
+            <td>TPM plugins directory</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background: rgba(76, 175, 80, 0.1); border-left: 4px solid #4caf50; border-radius: 4px; padding: 1.2em; margin-bottom: 1.5em;">
+      <div style="font-size: 0.95em; line-height: 1.7;">
+        <div style="color: #4caf50; font-weight: bold; margin-bottom: 0.5em;">Configuration Rule:</div>
+        <div style="color: #ddd;">
+          Always edit <code style="color: #4caf50; font-weight: bold;">~/.tmux.conf.local</code>
+        </div>
+        <div style="font-size: 0.85em; color: #aaa; margin-top: 0.5em;">
+          Never modify <code>~/.tmux.conf</code> directly - it's managed by oh-my-tmux
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Tip:</strong> The <code>.local</code> file is loaded after the main config, so your settings override oh-my-tmux defaults
+    </div>
+  </div>
+
+  <aside class="notes">
+    oh-my-tmux uses a layered configuration approach that separates framework code from user customizations.
+
+    The main tmux.conf is actually a symlink to the oh-my-tmux repository's configuration file. This is the framework's base configuration - you should never edit this directly because it will be overwritten when you update oh-my-tmux.
+
+    Instead, all your personal customizations go in tmux.conf.local. This file is loaded after the main config, so any settings you define here will override oh-my-tmux's defaults. This is where you add your keybindings, plugins, color schemes, and any other personal preferences.
+
+    The oh-my-tmux directory contains the cloned repository with the framework code. The plugins directory is where TPM (Tmux Plugin Manager) installs all your plugins.
+
+    This separation means you can safely update oh-my-tmux without losing your customizations, and you can version control your .local file independently.
+  </aside>
+</section>
+
+<section>
+  <h2>Reloading Config</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Command</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Edit config</td>
+        <td><span class="key">prefix</span> + <span class="key">e</span></td>
+      </tr>
+      <tr>
+        <td>Reload</td>
+        <td><span class="key">prefix</span> + <span class="key">r</span></td>
+      </tr>
+      <tr>
+        <td>From shell</td>
+        <td><code>tmux source-file ~/.tmux.conf</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> After editing config with <span class="key">prefix</span> + <span class="key">e</span>, reload with <span class="key">prefix</span> + <span class="key">r</span> to apply changes
+  </div>
+
+  <aside class="notes">
+    Configuration reloading workflow:
+    - prefix + e opens your config file in $EDITOR for quick edits
+    - prefix + r reloads the config to apply changes immediately
+    - Changes take effect in all existing sessions after reload
+    - You can also reload from shell with tmux source-file command
+    - Some changes may require restarting tmux or individual sessions
+    - This workflow makes iterating on config changes very fast
+  </aside>
+</section>
+
+<section>
+  <h2>oh-my-tmux Defaults</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix + e</span></td>
+        <td>Edit local config</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + r</span></td>
+        <td>Reload config</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + m</span></td>
+        <td>Toggle mouse mode</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + +</span></td>
+        <td>Maximize pane to new window</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + h/j/k/l</span></td>
+        <td>Navigate panes (vim-style)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + H/J/K/L</span></td>
+        <td>Resize panes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Use <span class="key">prefix + e</span> to quickly open your config file, make changes, then <span class="key">prefix + r</span> to reload without restarting tmux
+  </div>
+
+  <aside class="notes">
+    oh-my-tmux provides sensible defaults out of the box that improve upon vanilla tmux. The most useful bindings are prefix + e to edit your local config file, which opens it in your default editor, and prefix + r to reload the configuration without restarting tmux. Mouse mode toggling with prefix + m is handy when you need to select text with your mouse versus navigate with keyboard shortcuts. The vim-style navigation bindings (h/j/k/l) are far more ergonomic than the default arrow keys, and uppercase versions resize panes in the corresponding direction. The maximize binding (prefix + +) temporarily expands a pane to fill the entire window, useful when you need to focus on one thing, then restores it when you press it again.
+  </aside>
+</section>
+
+<section>
+  <h2>Status Bar</h2>
+
+  <p>oh-my-tmux provides a highly customizable status bar with rich features</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>24-bit color support</td>
+        <td><code>tmux_conf_24b_colour=true</code></td>
+      </tr>
+      <tr>
+        <td>Clock format</td>
+        <td><code>tmux_conf_theme_clock_style='24'</code></td>
+      </tr>
+      <tr>
+        <td>Displays</td>
+        <td>Session name, windows, time</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top: 1.5em;">Configuration Options</h3>
+
+  <p>Add to <code>~/.tmux.conf.local</code>:</p>
+
+  <pre><code class="language-bash"># Position status bar at top
+tmux_conf_theme_status_position='top'
+
+# Show battery status
+tmux_conf_theme_battery_status=true
+
+# Show hostname
+tmux_conf_theme_hostname=true</code></pre>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Restart tmux or run <span class="key">prefix</span> + <span class="key">r</span> to reload configuration
+  </div>
+
+  <aside class="notes">
+    The oh-my-tmux status bar provides excellent defaults with true color support and a clean, informative layout. The 24-hour clock format is enabled by default. The status bar displays your session name on the left, active windows in the center, and time/date on the right.
+
+    All customizations should be added to ~/.tmux.conf.local to avoid being overwritten by oh-my-tmux updates. Key options include:
+    - tmux_conf_theme_status_position: Move status bar to top or bottom (default: bottom)
+    - tmux_conf_theme_battery_status: Display battery percentage and status
+    - tmux_conf_theme_hostname: Show the hostname in the status bar
+
+    The status bar is highly customizable with many more options available in the oh-my-tmux documentation. Changes take effect after reloading the configuration with prefix + r.
+  </aside>
+</section>
+
+<section>
+  <h2>Custom Key Bindings in This Config</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+        <th>Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">|</span></td>
+        <td>Vertical split</td>
+        <td>Intuitive (looks like <code>|</code>)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">-</span></td>
+        <td>Horizontal split</td>
+        <td>Intuitive (looks like <code>-</code>)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">x</span></td>
+        <td>Kill pane (no confirm)</td>
+        <td>Faster workflow</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">X</span></td>
+        <td>Kill window (no confirm)</td>
+        <td>Faster workflow</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">n/p</span></td>
+        <td>Next/prev window</td>
+        <td>Re-enabled for convenience</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">a</span></td>
+        <td>Send C-a to shell</td>
+        <td>Beginning of line</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">Q</span></td>
+        <td>Save and quit</td>
+        <td>Clean exit</td>
+      </tr>
+      <tr>
+        <td><span class="key">j/k</span> in copy mode</td>
+        <td>Line navigation</td>
+        <td>Vim consistency</td>
+      </tr>
+      <tr>
+        <td><span class="key">C-j/C-k</span> in copy mode</td>
+        <td>Page navigation</td>
+        <td>Vim consistency</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">\</span></td>
+        <td>Rotate layout</td>
+        <td>Quick layout switching</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">g</span></td>
+        <td>Join pane (vertical)</td>
+        <td>Merge panes from other windows</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">G</span></td>
+        <td>Join pane (horizontal)</td>
+        <td>Merge panes from other windows</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> These bindings prioritize muscle memory and visual mnemonics over defaults
+  </div>
+
+  <aside class="notes">
+    These custom keybindings improve the default tmux experience in several ways:
+
+    - Visual mnemonics: The | and - keys visually represent the splits they create, making them far more intuitive than the default % and " keys
+
+    - Streamlined workflow: Removing confirmation prompts for kill operations (x and X) speeds up window management - if you make a mistake, you can usually undo with session persistence
+
+    - Vim consistency: The j/k bindings in copy mode align with vim navigation, reducing context switching for vim users. C-j/C-k provide faster page-by-page movement
+
+    - Shell integration: prefix + a sends C-a to the underlying shell, allowing you to jump to the beginning of a line even with C-a as your prefix
+
+    - Session management: prefix + Q provides a clean way to save session state and exit, integrating with tmux-resurrect/continuum
+
+    - Re-enabled n/p: Some configs disable these in favor of other bindings, but they're kept here for traditional tmux users
+
+    The goal is to make tmux feel more natural and reduce cognitive load when switching between tools.
+  </aside>
+</section>
+
+<section>
+  <h2>Adding Your Own Customizations</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div style="font-size: 0.9em;">
+      <h3 style="font-size: 1.1em; margin-bottom: 1em;">Custom Keybinding Syntax</h3>
+
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <pre style="margin: 0;"><code class="language-bash">bind <span style="color: #9ece6a;">KEY</span> <span style="color: #7aa2f7;">COMMAND</span> <span style="color: #bb9af7;">[OPTIONS]</span></code></pre>
+      </div>
+
+      <h3 style="font-size: 1.1em; margin-bottom: 1em;">Example: Custom Split</h3>
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <pre style="margin: 0;"><code class="language-bash"># Split to ~/Documents
+bind D split-window -h -c ~/Documents</code></pre>
+      </div>
+
+      <h3 style="font-size: 1.1em; margin-bottom: 1em;">More Examples</h3>
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444;">
+        <pre style="margin: 0; line-height: 1.8;"><code class="language-bash"># Quick SSH to server
+bind S split-window -h "ssh user@server"
+
+# Open htop in new window
+bind H new-window "htop"
+
+# Reload config
+bind r source-file ~/.tmux.conf.local \; \
+       display "Config reloaded!"</code></pre>
+      </div>
+    </div>
+
+    <div style="font-size: 0.9em;">
+      <h3 style="font-size: 1.1em; margin-bottom: 1em;">Common Options</h3>
+      <table style="font-size: 0.85em; margin-bottom: 1.5em;">
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>-h</code></td>
+            <td>Split horizontally (side-by-side)</td>
+          </tr>
+          <tr>
+            <td><code>-v</code></td>
+            <td>Split vertically (top/bottom)</td>
+          </tr>
+          <tr>
+            <td><code>-c PATH</code></td>
+            <td>Set starting directory</td>
+          </tr>
+          <tr>
+            <td><code>-n NAME</code></td>
+            <td>Set window name</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip" style="margin-bottom: 1.5em;">
+        <strong>Tip:</strong> Use <span class="key">prefix + :</span> to test commands before adding them to your config
+      </div>
+
+      <div style="background: #2d1f1f; border-left: 3px solid #f7768e; padding: 1em; border-radius: 4px; font-size: 0.85em;">
+        <strong style="color: #f7768e;">IMPORTANT:</strong> TPM initialization must be the last line in <code>~/.tmux.conf.local</code>
+        <div style="margin-top: 0.8em; background: #1a1a1a; padding: 0.8em; border-radius: 4px;">
+          <pre style="margin: 0;"><code class="language-bash"># ... your customizations ...
+
+# Initialize TPM (keep at bottom!)
+run '~/.tmux/plugins/tpm/tpm'</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Custom keybindings are where tmux really becomes your own. The bind command follows a simple pattern: bind KEY COMMAND OPTIONS.
+
+    Walk through the examples:
+    - The D binding creates a horizontal split starting in ~/Documents. Great for quickly accessing common directories.
+    - The S binding splits and immediately SSHs to a server. Useful for DevOps workflows.
+    - The H binding opens htop in a new window for monitoring.
+    - The r binding reloads your config and displays a message. Essential during configuration tweaking.
+
+    Tips for writing good custom bindings:
+    1. Choose keys that are mnemonic (D for Documents, H for htop)
+    2. Test commands in command mode first (prefix + :) before adding to config
+    3. Use display-message to confirm actions completed
+    4. Escape special characters with backslash when needed
+    5. Use continuation lines with backslash for readability
+
+    Critical reminder: TPM initialization MUST be the last line. If you add keybindings after TPM initialization, plugins may not load correctly or your bindings might be overridden.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise: Customization</h2>
+  <div class="exercise">
+    <ol>
+      <li>Open config: <span class="key">prefix</span> + <span class="key">e</span></li>
+      <li>Add a custom binding</li>
+      <li>Reload config: <span class="key">prefix</span> + <span class="key">r</span></li>
+      <li>Test your new binding</li>
+      <li>View all bindings: <code>tmux list-keys</code></li>
+    </ol>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Start with simple customizations like changing the prefix key or adding a new split binding
+  </div>
+
+  <aside class="notes">
+    Good first customizations to suggest:
+    - Change status bar colors (set -g status-bg colour235)
+    - Add a new split binding (bind-key | split-window -h)
+    - Increase scrollback buffer (set -g history-limit 10000)
+    - Enable mouse mode (set -g mouse on)
+    - Change the prefix key (set -g prefix C-space)
+    - Add custom key to launch common commands
+
+    Walk through the process: open config with prefix + e, add a simple binding like "bind-key r source-file ~/.tmux.conf \; display-message 'Config reloaded!'", reload with prefix + r, then test. Show tmux list-keys to verify the binding appears.
+  </aside>
+</section>

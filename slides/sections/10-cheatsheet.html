@@ -1,0 +1,204 @@
+<!-- ==================== SECTION 10: CHEAT SHEET ==================== -->
+<section>
+  <h1>Cheat Sheet</h1>
+  <p>Quick reference for all essential keybindings</p>
+  <aside class="notes">
+    This section provides a comprehensive cheat sheet organized by category. Use these slides as a quick reference during or after the tutorial. Each category is color-coded for easier navigation.
+  </aside>
+</section>
+
+<section>
+  <h2>Quick Reference (1/2)</h2>
+
+  <p style="text-align: center; margin-bottom: 1.5em; font-size: 0.95em; color: #888;">
+    <strong>Prefix:</strong> <span class="key">Ctrl-a</span> or <span class="key">Ctrl-b</span>
+  </p>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; font-size: 0.75em;">
+    <!-- Sessions -->
+    <div style="background: rgba(33, 150, 243, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(33, 150, 243, 0.3);">
+      <h3 style="color: #2196f3; font-size: 1.1em; margin-bottom: 0.8em; text-align: center;">Sessions</h3>
+      <table style="width: 100%; font-size: 1em;">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="key">prefix + s</span></td><td>Session tree</td></tr>
+          <tr><td><span class="key">prefix + d</span></td><td>Detach</td></tr>
+          <tr><td><span class="key">prefix + $</span></td><td>Rename</td></tr>
+          <tr><td><span class="key">prefix + Q</span></td><td>Save & quit</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Windows -->
+    <div style="background: rgba(156, 206, 106, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(156, 206, 106, 0.3);">
+      <h3 style="color: #9ece6a; font-size: 1.1em; margin-bottom: 0.8em; text-align: center;">Windows</h3>
+      <table style="width: 100%; font-size: 1em;">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="key">prefix + c</span></td><td>New window</td></tr>
+          <tr><td><span class="key">prefix + n/p</span></td><td>Next/prev</td></tr>
+          <tr><td><span class="key">prefix + 0-9</span></td><td>Jump to number</td></tr>
+          <tr><td><span class="key">prefix + X</span></td><td>Kill window</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Panes -->
+    <div style="background: rgba(187, 154, 247, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(187, 154, 247, 0.3);">
+      <h3 style="color: #bb9af7; font-size: 1.1em; margin-bottom: 0.8em; text-align: center;">Panes</h3>
+      <table style="width: 100%; font-size: 1em;">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="key">prefix + |</span></td><td>Vertical split</td></tr>
+          <tr><td><span class="key">prefix + -</span></td><td>Horizontal split</td></tr>
+          <tr><td><span class="key">prefix + h/j/k/l</span></td><td>Navigate</td></tr>
+          <tr><td><span class="key">prefix + x</span></td><td>Kill pane</td></tr>
+          <tr><td><span class="key">prefix + z</span></td><td>Zoom toggle</td></tr>
+          <tr><td><span class="key">prefix + \</span></td><td>Rotate layout</td></tr>
+          <tr><td><span class="key">prefix + g/G</span></td><td>Join pane</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <aside class="notes">
+    This slide covers the three main organizational levels of tmux: sessions, windows, and panes. Each category is color-coded for easier reference.
+
+    Sessions (blue): Managing your workspaces - switching, detaching, renaming, and safely quitting with save.
+    Windows (green): Tab-like navigation - creating new windows, jumping between them, and removing them.
+    Panes (purple): Split screen management - creating splits, navigating between them, zooming for focus, and advanced operations like rotating layouts or joining panes from other windows.
+
+    Note the join pane bindings (g/G) use fzf for selection, making it easy to merge panes from any window.
+  </aside>
+</section>
+
+<section>
+  <h2>Quick Reference (2/2)</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.8em;">
+    <!-- Copy Mode -->
+    <div style="background: rgba(224, 175, 104, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(224, 175, 104, 0.3);">
+      <h3 style="color: #e0af68; font-size: 1.1em; margin-bottom: 0.8em; text-align: center;">Copy Mode <span style="font-size: 0.8em; color: #888;">(<span class="key">prefix + [</span>)</span></h3>
+      <table style="width: 100%; font-size: 1em;">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="key">j/k</span></td><td>Line up/down</td></tr>
+          <tr><td><span class="key">C-j/C-k</span></td><td>Page up/down</td></tr>
+          <tr><td><span class="key">/</span></td><td>Search</td></tr>
+          <tr><td><span class="key">v</span></td><td>Start selection</td></tr>
+          <tr><td><span class="key">y</span></td><td>Copy</td></tr>
+          <tr><td><span class="key">prefix + ]</span></td><td>Paste</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Persistence -->
+    <div style="background: rgba(122, 162, 247, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(122, 162, 247, 0.3);">
+      <h3 style="color: #7aa2f7; font-size: 1.1em; margin-bottom: 0.8em; text-align: center;">Persistence</h3>
+      <table style="width: 100%; font-size: 1em;">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="key">prefix + Ctrl-s</span></td><td>Save</td></tr>
+          <tr><td><span class="key">prefix + Ctrl-r</span></td><td>Restore</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; font-size: 0.8em;">
+    <!-- Config & Plugins -->
+    <div style="background: rgba(247, 118, 142, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(247, 118, 142, 0.3);">
+      <h3 style="color: #f7768e; font-size: 1.1em; margin-bottom: 0.8em; text-align: center;">Config & Plugins</h3>
+      <table style="width: 100%; font-size: 1em;">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="key">prefix + e</span></td><td>Edit config</td></tr>
+          <tr><td><span class="key">prefix + r</span></td><td>Reload config</td></tr>
+          <tr><td><span class="key">prefix + m</span></td><td>Toggle mouse</td></tr>
+          <tr><td><span class="key">prefix + I</span></td><td>Install plugins</td></tr>
+          <tr><td><span class="key">prefix + ?</span></td><td>List all bindings</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Discovery -->
+    <div style="background: rgba(158, 206, 106, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid rgba(158, 206, 106, 0.3);">
+      <h3 style="color: #9ece6a; font-size: 1.1em; margin-bottom: 0.8em; text-align: center;">Discovery</h3>
+      <table style="width: 100%; font-size: 1em;">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="key">prefix + Space</span></td><td>which-key menu</td></tr>
+          <tr><td><span class="key">prefix + ?</span></td><td>List all bindings</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5rem; font-size: 0.85em;">
+    <strong>Pro Tip:</strong> Press <span class="key">prefix + Space</span> to open the which-key menu for interactive command discovery, or <span class="key">prefix + ?</span> for a complete binding list.
+  </div>
+
+  <aside class="notes">
+    This slide covers the remaining essential categories:
+
+    Copy Mode (orange): Vim-style navigation in scrollback buffer. Enter with prefix + [, navigate with j/k, search with /, select with v, copy with y, and paste with prefix + ].
+
+    Persistence (light blue): Manual save and restore commands for session state. These work alongside continuum's automatic saving.
+
+    Config & Plugins (red): Quick access to editing and reloading configuration, toggling mouse mode, and managing plugins with tpm.
+
+    Discovery (green): The two most important discovery tools - which-key for interactive menus and the native tmux binding list. These help you learn and remember keybindings without leaving tmux.
+
+    The tip emphasizes which-key as the primary discovery tool, with the native list as a fallback for comprehensive reference.
+  </aside>
+</section>
+
+<section>
+  <h2>Thank You</h2>
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <h3 style="color: #7aa2f7; margin-bottom: 2rem;">Questions?</h3>
+
+    <div style="text-align: left; max-width: 600px; margin: 0 auto; font-size: 0.9em;">
+      <h4 style="color: #9ece6a; margin-bottom: 1rem;">Resources:</h4>
+      <ul style="line-height: 2;">
+        <li><span class="key">prefix + Space</span> - which-key menu (interactive discovery)</li>
+        <li><span class="key">prefix + ?</span> - All keybindings (complete list)</li>
+        <li><code>man tmux</code> - Full documentation</li>
+        <li><span class="key">prefix + r</span> - Reload config</li>
+        <li><code>~/.tmux.conf.local</code> - Your customizations</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 0.85em;">
+    <strong>Next Steps:</strong> Explore the which-key menu to discover additional bindings, customize your <code>~/.tmux.conf.local</code>, and check out the plugin ecosystem for extended functionality.
+  </div>
+
+  <aside class="notes">
+    Thank the audience and open for questions.
+
+    Emphasize the key resources:
+    - which-key menu (prefix + Space) is the fastest way to discover commands interactively
+    - prefix + ? shows all bindings in a searchable list
+    - man tmux provides comprehensive documentation for advanced features
+    - prefix + r lets you reload config after making changes
+    - ~/.tmux.conf.local is where all customizations should go
+
+    Encourage participants to start using tmux immediately, explore the which-key menus, and gradually customize their setup based on their workflow needs. The configuration provided is a solid foundation, but tmux's true power comes from personalization.
+  </aside>
+</section>

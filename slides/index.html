@@ -391,14 +391,2021 @@ make setup-minimal  # Skip auto plugin install</code></pre>
   </aside>
 </section>
 
+        <!-- ==================== SECTION 02: ESSENTIAL CONCEPTS ==================== -->
+<section>
+  <h2>Prefix Key</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div style="font-size: 0.9em;">
+      <p style="margin-bottom: 1.2em; line-height: 1.6;">
+        All tmux commands start with a <strong>prefix key</strong>. This config supports both:
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 1.5em; margin: 1.5em 0;">
+        <div style="text-align: center;">
+          <div style="font-size: 1.8em; margin-bottom: 0.3em;">
+            <span class="key">Ctrl-a</span>
+          </div>
+          <div style="font-size: 0.75em; color: #888;">oh-my-tmux default</div>
+        </div>
+        <div style="font-size: 1.8em; color: #666; align-self: center;">or</div>
+        <div style="text-align: center;">
+          <div style="font-size: 1.8em; margin-bottom: 0.3em;">
+            <span class="key">Ctrl-b</span>
+          </div>
+          <div style="font-size: 0.75em; color: #888;">tmux default</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 1.5em; font-size: 0.85em; line-height: 1.6;">
+        Press the prefix key, release it, then press the command key.
+      </p>
+
+      <div style="background: #1a1a1a; padding: 1em; border-radius: 8px; border: 1px solid #444; margin-top: 1em; font-size: 0.85em; text-align: center;">
+        <span class="key">Ctrl-a</span>
+        <span style="margin: 0 0.5em; color: #666;">→</span>
+        <span class="key">c</span>
+        <div style="margin-top: 0.8em; color: #4caf50; font-size: 0.9em;">Creates a new window</div>
+      </div>
+    </div>
+
+    <div style="font-size: 0.85em;">
+      <div class="tip" style="margin-bottom: 1.5em;">
+        <strong>Tip:</strong> Pick one prefix and build muscle memory. Most people prefer <span class="key">Ctrl-a</span> since it's easier to reach.
+      </div>
+
+      <h3 style="font-size: 1em; margin-bottom: 0.8em; color: #2196f3;">Special Case</h3>
+      <p style="line-height: 1.6; margin-bottom: 0.6em;">
+        Need to send <span class="key">Ctrl-a</span> to the shell (e.g., jump to beginning of line)?
+      </p>
+      <div style="background: #1a1a1a; padding: 0.8em; border-radius: 8px; border: 1px solid #444; text-align: center;">
+        <span class="key">prefix</span> + <span class="key">a</span>
+      </div>
+      <p style="margin-top: 0.6em; font-size: 0.8em; color: #888; line-height: 1.5;">
+        Sends actual <code>C-a</code> to the application
+      </p>
+
+      <div style="margin-top: 1.5em; padding: 1em; background: #1a1a1a; border-radius: 8px; border: 1px solid #444;">
+        <div style="font-size: 0.85em; margin-bottom: 0.5em; color: #888;">Command Flow:</div>
+        <div style="text-align: center; font-family: monospace; line-height: 2;">
+          <div><span class="key">Ctrl-a</span></div>
+          <div style="color: #666;">↓</div>
+          <div style="color: #4caf50;">Tmux listens</div>
+          <div style="color: #666;">↓</div>
+          <div><span class="key">command key</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    The prefix key is fundamental to tmux. Think of it as a signal that says "hey tmux, this next keystroke is for you, not the shell."
+
+    This configuration supports both Ctrl-a and Ctrl-b, which is nice for flexibility. Ctrl-a is generally preferred because it's easier to reach on most keyboards—you don't need to stretch as far. However, Ctrl-a conflicts with the readline keybinding for "beginning of line" in bash and other shells. That's why we have prefix + a to send the actual Ctrl-a to the shell when you need it.
+
+    The key point: pick one and stick with it. Muscle memory is everything with tmux. Within a week of daily use, the prefix will become second nature.
+  </aside>
+</section>
+
+<section>
+  <h2>The Mental Model</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 3em; align-items: start; margin-top: 2em;">
+    <!-- Left side: Hierarchy text -->
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444;">
+      <pre style="margin: 0; line-height: 1.8; color: #e0e0e0;"><strong style="color: #7aa2f7;">Server</strong>
+  └── <strong style="color: #9ece6a;">Session</strong> (work)
+        ├── <strong style="color: #bb9af7;">Window</strong> 0: editor
+        │     ├── <strong style="color: #f7768e;">Pane</strong> 1
+        │     └── <strong style="color: #f7768e;">Pane</strong> 2
+        ├── <strong style="color: #bb9af7;">Window</strong> 1: tests
+        │     └── <strong style="color: #f7768e;">Pane</strong> 1
+        └── <strong style="color: #bb9af7;">Window</strong> 2: logs
+              └── <strong style="color: #f7768e;">Pane</strong> 1</pre>
+    </div>
+
+    <!-- Right side: Explanations -->
+    <div style="font-size: 0.9em;">
+      <div style="margin-bottom: 1.2em; padding: 0.8em; background: rgba(122, 162, 247, 0.1); border-left: 3px solid #7aa2f7; border-radius: 4px;">
+        <strong style="color: #7aa2f7;">Server</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Runs in background, manages everything</span>
+      </div>
+
+      <div style="margin-bottom: 1.2em; padding: 0.8em; background: rgba(158, 206, 106, 0.1); border-left: 3px solid #9ece6a; border-radius: 4px;">
+        <strong style="color: #9ece6a;">Session</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Named collection of windows (e.g., "work", "personal")<br>Persists after detach</span>
+      </div>
+
+      <div style="margin-bottom: 1.2em; padding: 0.8em; background: rgba(187, 154, 247, 0.1); border-left: 3px solid #bb9af7; border-radius: 4px;">
+        <strong style="color: #bb9af7;">Window</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Full terminal screen, numbered 0, 1, 2...<br>Like browser tabs</span>
+      </div>
+
+      <div style="padding: 0.8em; background: rgba(247, 118, 142, 0.1); border-left: 3px solid #f7768e; border-radius: 4px;">
+        <strong style="color: #f7768e;">Pane</strong><br>
+        <span style="font-size: 0.9em; color: #ccc;">Subdivision of a window<br>Split vertically or horizontally</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 2em; font-size: 0.9em;">
+    <strong>Tip:</strong> Think of Sessions as projects, Windows as tasks within a project, and Panes as different views of the same task.
+  </div>
+
+  <aside class="notes">
+    This is the fundamental mental model for understanding tmux's hierarchy.
+
+    Walk through the hierarchy from top to bottom:
+    - Server: The tmux server runs in the background and manages all sessions. You rarely interact with it directly.
+    - Session: A named workspace that contains windows. Sessions persist after you detach, which is the key to tmux's power.
+    - Window: Like tabs in a browser. Each window is a full terminal screen. You switch between windows to focus on different tasks.
+    - Pane: Splits within a single window. Useful for viewing multiple things simultaneously (code editor on left, terminal on right, logs at bottom).
+
+    Real-world example: You might have a "work" session with windows for editor, tests, and logs. Within the editor window, you might split panes to show code and documentation side-by-side.
+
+    The color coding helps distinguish the hierarchy levels visually.
+  </aside>
+</section>
+
+<section>
+  <h2>Keybinding Discovery</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Keybinding/Command</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix + ?</span></td>
+        <td>List all keybindings (searchable)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + :</span></td>
+        <td>Command prompt (run tmux commands)</td>
+      </tr>
+      <tr>
+        <td><code>tmux list-keys</code></td>
+        <td>List all bindings from shell</td>
+      </tr>
+      <tr>
+        <td><code>tmux show-options -g</code></td>
+        <td>Show global options</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> In the keybinding list, press <span class="key">/</span> to search, <span class="key">q</span> to exit
+  </div>
+
+  <aside class="notes">
+    The question mark binding is invaluable for discovering keybindings. The list is searchable using forward slash, similar to vim or less. The command prompt lets you run any tmux command without leaving your session. From the shell, list-keys and show-options provide programmatic access to your configuration.
+  </aside>
+</section>
+
+<section>
+  <h2>Modes in Tmux</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Mode</th>
+        <th>Purpose</th>
+        <th>Enter</th>
+        <th>Exit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Normal</strong></td>
+        <td>Default mode, receive prefix commands</td>
+        <td>Default</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td><strong>Copy</strong></td>
+        <td>Navigate/search/copy scrollback buffer</td>
+        <td><span class="key">prefix + [</span></td>
+        <td><span class="key">q</span></td>
+      </tr>
+      <tr>
+        <td><strong>Command</strong></td>
+        <td>Run tmux commands directly</td>
+        <td><span class="key">prefix + :</span></td>
+        <td><span class="key">Enter</span> or <span class="key">Escape</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <aside class="notes">
+    Tmux has three primary modes. Normal mode is the default where you use prefix commands. Copy mode lets you scroll through history, search, and copy text. Command mode is like Vim's command line where you can enter tmux commands directly.
+  </aside>
+</section>
+
+<section>
+  <h2>Anatomy of a Keybinding</h2>
+
+  <div style="margin: 2em 0;">
+    <h3>Example Breakdown</h3>
+    <p style="font-size: 1.2em;">
+      <code>prefix + C-s</code> means:
+      <br>
+      <span style="color: #e74c3c;">Press prefix key</span>, then <span style="color: #3498db;">Ctrl + s</span>
+    </p>
+  </div>
+
+  <div style="margin: 2em 0; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <h3>Notation Guide</h3>
+    <pre><code>C-x    = Ctrl + x
+M-x    = Alt + x (Meta)
+S-x    = Shift + x
+prefix = Ctrl-a or Ctrl-b</code></pre>
+  </div>
+
+  <div style="margin: 2em 0;">
+    <h3>Common Patterns</h3>
+    <table style="font-size: 0.8em;">
+      <thead>
+        <tr>
+          <th>Notation</th>
+          <th>Meaning</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>prefix + c</code></td>
+          <td>prefix, then <span class="key">c</span></td>
+          <td>New window</td>
+        </tr>
+        <tr>
+          <td><code>prefix + C-s</code></td>
+          <td>prefix, then <span class="key">Ctrl-s</span></td>
+          <td>Save session</td>
+        </tr>
+        <tr>
+          <td><code>prefix + I</code></td>
+          <td>prefix, then <span class="key">Shift-i</span></td>
+          <td>Install plugins</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <aside class="notes">
+    The prefix key is pressed first and released before the next key.
+    This is different from Ctrl-s where both keys are held together.
+    The notation C-x, M-x, S-x is standard across Unix documentation.
+    Default prefix is Ctrl-b, but many users remap to Ctrl-a.
+  </aside>
+</section>
+
+<section>
+  <h2>Config Architecture</h2>
+
+  <div class="config-flow" style="display: flex; flex-direction: column; align-items: center; gap: 2rem; margin: 2rem 0;">
+
+    <div style="background: #2d2d2d; padding: 1.5rem 2rem; border-radius: 8px; border: 2px solid #e74c3c; min-width: 400px;">
+      <div style="font-size: 1.2em; margin-bottom: 0.5rem;">
+        <code>~/.tmux.conf</code>
+      </div>
+      <div style="color: #e74c3c; font-weight: bold;">← oh-my-tmux base (DON'T edit)</div>
+    </div>
+
+    <div style="font-size: 2em; color: #3498db;">↓ sources</div>
+
+    <div style="background: #2d2d2d; padding: 1.5rem 2rem; border-radius: 8px; border: 2px solid #2ecc71; min-width: 400px;">
+      <div style="font-size: 1.2em; margin-bottom: 0.5rem;">
+        <code>~/.tmux.conf.local</code>
+      </div>
+      <div style="color: #2ecc71; font-weight: bold;">← Your customizations (EDIT THIS)</div>
+    </div>
+
+    <div style="font-size: 2em; color: #3498db;">↓ loads</div>
+
+    <div style="background: #2d2d2d; padding: 1.5rem 2rem; border-radius: 8px; border: 2px solid #95a5a6; min-width: 400px;">
+      <div style="font-size: 1.2em; margin-bottom: 0.5rem;">
+        <code>~/.tmux/plugins/</code>
+      </div>
+      <div style="color: #95a5a6; font-weight: bold;">← Plugin files (managed by tpm)</div>
+    </div>
+
+  </div>
+
+  <aside class="notes">
+    The config architecture follows a three-tier hierarchy. At the top is .tmux.conf from oh-my-tmux - never edit this file directly as it gets overwritten on updates. This sources .tmux.conf.local, which is where all your customizations should go. Finally, .tmux.conf.local loads plugins from the .tmux/plugins directory, which are managed by TPM. Always edit .tmux.conf.local, not the base .tmux.conf file.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 1: Discovery</h2>
+
+  <div class="exercise">
+    <h3>Explore Tmux Internals</h3>
+    <ol>
+      <li>Start tmux: <code>tmux</code></li>
+      <li>View all keybindings: <span class="key">Ctrl-a ?</span></li>
+      <li>Search for "split" by pressing <span class="key">/</span></li>
+      <li>Exit help with <span class="key">q</span></li>
+      <li>Open command mode: <span class="key">Ctrl-a :</span></li>
+      <li>View global options: <code>show-options -g</code></li>
+      <li>Browse sessions: <span class="key">Ctrl-a s</span></li>
+    </ol>
+  </div>
+
+  <aside class="notes">
+    Walk through each step with the audience. Emphasize that the help system is searchable and comprehensive. Show how command mode gives direct access to tmux internals. The session tree view demonstrates tmux's organizational hierarchy.
+  </aside>
+</section>
+
+        <!-- ==================== SECTION 03: NAVIGATION ==================== -->
+<section>
+  <h2>Navigation Overview</h2>
+  <p>Three levels of navigation:</p>
+  <ul>
+    <li><strong>Sessions</strong> → groups of windows</li>
+    <li><strong>Windows</strong> → tabs within a session</li>
+    <li><strong>Panes</strong> → splits within a window</li>
+  </ul>
+
+  <pre style="font-size: 0.5em; text-align: left; margin-top: 40px;">
+┌─ Session: "work" ─────────────────────────────────────────────┐
+│                                                                │
+│  ┌─ Window 1: editor ──┬─ Window 2: server ─┬─ Window 3 ─┐   │
+│  │                      │                    │             │   │
+│  │  ┌─────────┬──────┐ │  ┌──────────────┐  │             │   │
+│  │  │ Pane 1  │Pane 2│ │  │   Pane 1     │  │   Pane 1    │   │
+│  │  │  vim    │ term │ │  │   npm start  │  │             │   │
+│  │  └─────────┴──────┘ │  └──────────────┘  │             │   │
+│  └──────────────────────┴────────────────────┴─────────────┘   │
+└────────────────────────────────────────────────────────────────┘
+  </pre>
+
+  <aside class="notes">
+    Navigation in tmux happens at three levels: sessions, windows, and panes. Understanding this hierarchy is essential for efficient tmux usage. Sessions contain windows, windows contain panes. You'll navigate between all three constantly.
+  </aside>
+</section>
+
+<section>
+  <h2>Session Tree <span class="key">prefix</span> + <span class="key">s</span></h2>
+
+  <p>Visual tree view of all sessions, windows, and panes</p>
+
+  <pre><code>├─ dev-env-tmux
+│  ├─ editor (3 panes)
+│  ├─ terminal
+│  └─ server
+├─ work
+│  ├─ api (2 panes)
+│  └─ frontend
+└─ dotfiles
+   └─ vim</code></pre>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">j</span> / <span class="key">k</span> or arrows</td><td>Navigate</td></tr>
+      <tr><td><span class="key">h</span> / <span class="key">l</span></td><td>Collapse / Expand</td></tr>
+      <tr><td><span class="key">Enter</span></td><td>Switch to selected</td></tr>
+      <tr><td><span class="key">x</span></td><td>Kill selected item</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    The session tree is one of the most powerful navigation features in tmux. It provides a visual overview of your entire tmux environment. Use vim-style navigation to move around, expand and collapse nodes, and quickly switch to any session, window, or pane.
+  </aside>
+</section>
+
+<section>
+  <h2>Window Navigation</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">c</span></td><td>Create new window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">n</span></td><td>Next window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">p</span></td><td>Previous window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">0-9</span></td><td>Jump to window by number</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">w</span></td><td>Window list (interactive)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">,</span></td><td>Rename current window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Tab</span></td><td>Last active window (oh-my-tmux)</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Windows are like browser tabs. Create new ones with prefix-c, navigate sequentially with n/p, or jump directly by number. The window list (prefix-w) shows all windows across all sessions. Rename windows with prefix-comma to keep things organized.
+  </aside>
+</section>
+
+<section>
+  <h2>Pane Navigation</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">h/j/k/l</span></td><td>Move between panes (vim-style)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">o</span></td><td>Cycle through panes</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">;</span></td><td>Toggle last active pane</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">q</span></td><td>Show pane numbers, press number to jump</td></tr>
+    </tbody>
+  </table>
+
+  <pre style="font-size: 0.8em; line-height: 1.3; margin-top: 2em;">
+         k (up)
+           ↑
+           |
+    h ← [pane] → l
+           |
+           ↓
+       j (down)
+  </pre>
+
+  <aside class="notes">
+    Pane navigation uses vim-style h/j/k/l keys thanks to oh-my-tmux. This makes moving between panes feel natural if you're a vim user. The prefix-q command is useful for layouts with many panes - it briefly shows numbers on each pane that you can press to jump directly.
+  </aside>
+</section>
+
+<section>
+  <h2>Mouse Navigation</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">m</span></td>
+        <td>Toggle mouse mode</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+    <div>
+      <h3>When Enabled</h3>
+      <ul>
+        <li>Click to select pane</li>
+        <li>Click window in status bar</li>
+        <li>Scroll to enter copy mode</li>
+        <li>Drag pane borders to resize</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3>When Disabled</h3>
+      <ul>
+        <li>Terminal selection works normally</li>
+        <li>Better for copy/paste with terminal</li>
+      </ul>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Mouse mode is a personal preference. When enabled, it makes tmux more intuitive for mouse users but can interfere with terminal text selection. Toggle it with prefix-m to find what works best for your workflow. Many users keep it enabled and hold Shift to bypass tmux when selecting text.
+  </aside>
+</section>
+
+<section>
+  <h2>Quick Returns</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">;</span></td>
+        <td>Last active pane</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">Tab</span></td>
+        <td>Last active window</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 2em;">
+    <h3>Workflow Example</h3>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1em; font-size: 0.9em;">
+      <div>Work in Pane A</div>
+      <div>→</div>
+      <div>Check Pane B</div>
+      <div>→</div>
+      <div><span class="key">prefix</span> + <span class="key">;</span></div>
+      <div>→</div>
+      <div>Back to Pane A</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    These two keybindings are essential for efficient workflows. Instead of navigating through multiple panes or windows, you can quickly toggle back to where you were. This is especially useful when checking logs, running tests, or referencing documentation while coding.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 2 - Navigation</h2>
+  <div class="exercise">
+    <ol>
+      <li>Create 3 windows with <span class="key">prefix</span> + <span class="key">c</span></li>
+      <li>Navigate with <span class="key">prefix</span> + <span class="key">n</span> and <span class="key">prefix</span> + <span class="key">p</span></li>
+      <li>Use <span class="key">prefix</span> + <span class="key">1</span>, <span class="key">prefix</span> + <span class="key">2</span> to jump directly</li>
+      <li>Open session tree with <span class="key">prefix</span> + <span class="key">s</span></li>
+      <li>Navigate tree with <span class="key">j</span>/<span class="key">k</span>, expand with <span class="key">l</span></li>
+      <li>Press <span class="key">q</span> to exit tree</li>
+    </ol>
+  </div>
+  <div class="tip">
+    <strong>Bonus:</strong> Create panes and practice <span class="key">prefix</span> + <span class="key">h</span>/<span class="key">j</span>/<span class="key">k</span>/<span class="key">l</span>
+  </div>
+
+  <aside class="notes">
+    Walk through each step with the audience. Let them practice creating windows, navigating between them, and exploring the session tree. The session tree is particularly important to understand as it provides an overview of the entire tmux environment.
+  </aside>
+</section>
+
+        <!-- ==================== SECTION 04: SESSIONS ==================== -->
+<section>
+  <h2>Session Management</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #2196f3;">From Shell</h3>
+      <table style="font-size: 0.85em;">
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>tmux new -s name</code></td>
+            <td>Create named session</td>
+          </tr>
+          <tr>
+            <td><code>tmux attach -t name</code></td>
+            <td>Attach to session</td>
+          </tr>
+          <tr>
+            <td><code>tmux ls</code></td>
+            <td>List all sessions</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #9ece6a;">From Tmux</h3>
+      <table style="font-size: 0.85em;">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">C-c</span></td>
+            <td>Create new session</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">d</span></td>
+            <td>Detach from session</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">$</span></td>
+            <td>Rename session</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">s</span></td>
+            <td>Session tree</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-top: 2em; padding: 1.2em; background: #1a1a1a; border-radius: 8px; border: 1px solid #444;">
+    <h3 style="font-size: 1em; margin-bottom: 0.8em; color: #f7768e;">Common Workflow</h3>
+    <div style="display: flex; align-items: center; justify-content: space-around; font-size: 0.85em; line-height: 1.8;">
+      <div style="text-align: center;">
+        <code style="display: block; margin-bottom: 0.3em;">tmux new -s work</code>
+        <div style="color: #888; font-size: 0.9em;">Create session</div>
+      </div>
+      <div style="color: #666; font-size: 1.5em;">→</div>
+      <div style="text-align: center;">
+        <span class="key" style="display: inline-block; margin-bottom: 0.3em;">prefix + d</span>
+        <div style="color: #888; font-size: 0.9em;">Detach</div>
+      </div>
+      <div style="color: #666; font-size: 1.5em;">→</div>
+      <div style="text-align: center;">
+        <code style="display: block; margin-bottom: 0.3em;">tmux attach -t work</code>
+        <div style="color: #888; font-size: 0.9em;">Reattach later</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+    <strong>Tip:</strong> Sessions persist after detach. Use <code>tmux ls</code> to see all running sessions, even after closing your terminal or SSH disconnecting.
+  </div>
+
+  <aside class="notes">
+    Session management is tmux's killer feature. Sessions persist in the background after you detach, which means your work continues even if your terminal closes or your SSH connection drops.
+
+    From the shell, you create named sessions with "tmux new -s name", attach to existing ones with "tmux attach -t name", and list all sessions with "tmux ls". From within tmux, you can create new sessions with prefix + Ctrl-c (oh-my-tmux binding), detach with prefix + d, rename with prefix + $, and use the session tree (prefix + s) to navigate between sessions.
+
+    The typical workflow: create a session for a project, do your work, detach when switching contexts, then reattach later. Sessions keep all windows, panes, and their state intact. Combined with tmux-continuum, your sessions auto-save and restore even after system reboots.
+
+    Think of sessions as project workspaces that never go away unless you explicitly kill them.
+  </aside>
+</section>
+
+<section>
+  <h2>Session Navigation</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">s</span></td>
+        <td>Session tree (visual browser)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">C-f</span></td>
+        <td>Find session by name (oh-my-tmux)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">(</span></td>
+        <td>Switch to previous session</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">)</span></td>
+        <td>Switch to next session</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> The session tree (<span class="key">prefix</span> + <span class="key">s</span>) provides the most visual and intuitive way to navigate between sessions, showing all sessions, windows, and panes in a hierarchical view.
+  </div>
+
+  <aside class="notes">
+    Session navigation is essential when working with multiple projects. The session tree is the most powerful option - it shows all sessions, windows, and panes in an expandable tree view. Use j/k to navigate, Enter to switch. The C-f binding from oh-my-tmux lets you search sessions by name, useful when you have many sessions. The parenthesis bindings provide quick sequential navigation similar to window navigation with n/p.
+  </aside>
+</section>
+
+<section>
+  <h2>Detach vs Kill</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; margin-top: 2em;">
+    <!-- Detach Column -->
+    <div style="background: rgba(46, 204, 113, 0.1); border: 2px solid #2ecc71; border-radius: 8px; padding: 1.5em;">
+      <h3 style="color: #2ecc71; margin-top: 0;">Detach</h3>
+      <p style="font-size: 0.9em; margin-bottom: 1.5em;">Session keeps running in background</p>
+
+      <div style="background: #1a1a1a; padding: 1em; border-radius: 8px; border: 1px solid #444; text-align: center; margin-bottom: 1em;">
+        <span class="key">prefix</span> + <span class="key">d</span>
+      </div>
+
+      <ul style="font-size: 0.85em; line-height: 1.8;">
+        <li>Processes continue running</li>
+        <li>Can reattach anytime</li>
+        <li>Session persists on server</li>
+      </ul>
+    </div>
+
+    <!-- Kill Column -->
+    <div style="background: rgba(231, 76, 60, 0.1); border: 2px solid #e74c3c; border-radius: 8px; padding: 1.5em;">
+      <h3 style="color: #e74c3c; margin-top: 0;">Kill</h3>
+      <p style="font-size: 0.9em; margin-bottom: 1.5em;">Session and all processes terminated</p>
+
+      <div style="background: #1a1a1a; padding: 0.8em; border-radius: 8px; border: 1px solid #444; font-size: 0.85em; margin-bottom: 1em;">
+        <code>tmux kill-session -t name</code>
+      </div>
+
+      <ul style="font-size: 0.85em; line-height: 1.8;">
+        <li>All processes stopped</li>
+        <li>Session removed permanently</li>
+        <li>Cannot reattach</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Commands Table -->
+  <div style="margin-top: 2em;">
+    <h3 style="font-size: 1.1em; margin-bottom: 0.8em;">Kill Commands</h3>
+    <table style="font-size: 0.85em;">
+      <thead>
+        <tr>
+          <th>Command</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>tmux kill-session -t name</code></td>
+          <td>Kill specific session</td>
+        </tr>
+        <tr>
+          <td><code>tmux kill-server</code></td>
+          <td>Kill all sessions</td>
+        </tr>
+        <tr>
+          <td><span class="key">prefix</span> + <span class="key">Q</span></td>
+          <td>Save session and quit (custom)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+    <strong>Tip:</strong> Always detach unless you're done with the session. Detaching preserves your work environment for later.
+  </div>
+
+  <aside class="notes">
+    The distinction between detach and kill is fundamental to tmux usage.
+
+    Detaching is the normal way to leave a tmux session. When you detach with prefix-d, the session continues running in the background. All processes keep running, windows stay open, and you can reattach later exactly where you left off. This is one of tmux's core features - persistent sessions that survive SSH disconnections and terminal closes.
+
+    Killing a session terminates it permanently. All processes in that session are stopped, windows are closed, and the session is removed from the tmux server. Use kill-session when you're truly done with a project or need to clean up old sessions.
+
+    The kill-server command is nuclear - it terminates the entire tmux server and all sessions. Use with caution.
+
+    The custom prefix-Q binding is from tmux-resurrect or tmux-continuum - it saves the session state before quitting, allowing you to restore it later.
+
+    Best practice: Make detaching your default. Only kill sessions when you're certain you won't need them again.
+  </aside>
+</section>
+
+<section>
+  <h2>Session Workflow</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3em; align-items: start; margin-top: 2em;">
+    <!-- Left side: Step-by-step workflow -->
+    <div style="font-size: 0.85em;">
+      <h3 style="color: #7aa2f7; margin-bottom: 1em;">Multi-Project Workflow</h3>
+
+      <div style="background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444; font-family: 'JetBrains Mono', monospace;">
+        <!-- Step 1 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            1. Start session for Project A
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px;">
+            <code>tmux new -s project-a</code>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            2. Do work...
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; color: #666;">
+            <code>git clone ..., npm install, etc.</code>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #bb9af7; font-weight: bold; margin-bottom: 0.5em;">
+            3. Detach when switching contexts
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; text-align: center;">
+            <span class="key">prefix</span> + <span class="key">d</span>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            4. Start session for Project B
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px;">
+            <code>tmux new -s project-b</code>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            5. Do work...
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; color: #666;">
+            <code>vim, make build, tests, etc.</code>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div>
+          <div style="color: #f7768e; font-weight: bold; margin-bottom: 0.5em;">
+            6. Use session tree to switch
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; text-align: center;">
+            <span class="key">prefix</span> + <span class="key">s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side: Visual representation -->
+    <div style="font-size: 0.85em;">
+      <h3 style="color: #7aa2f7; margin-bottom: 1em;">Session State</h3>
+
+      <div style="background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444;">
+        <!-- Project A Session -->
+        <div style="margin-bottom: 2em; padding: 1em; border: 2px solid #9ece6a; border-radius: 6px; background: rgba(158, 206, 106, 0.05);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8em;">
+            <div style="color: #9ece6a; font-weight: bold; font-size: 1.1em;">
+              Session: project-a
+            </div>
+            <div style="background: rgba(158, 206, 106, 0.2); padding: 0.3em 0.8em; border-radius: 4px; font-size: 0.8em; color: #9ece6a;">
+              Detached
+            </div>
+          </div>
+          <div style="color: #888; font-size: 0.85em; line-height: 1.6;">
+            Windows: editor, tests, logs<br>
+            Working dir: ~/projects/project-a<br>
+            Status: Running in background
+          </div>
+        </div>
+
+        <!-- Project B Session -->
+        <div style="padding: 1em; border: 2px solid #2196f3; border-radius: 6px; background: rgba(33, 150, 243, 0.05);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8em;">
+            <div style="color: #2196f3; font-weight: bold; font-size: 1.1em;">
+              Session: project-b
+            </div>
+            <div style="background: rgba(33, 150, 243, 0.2); padding: 0.3em 0.8em; border-radius: 4px; font-size: 0.8em; color: #2196f3;">
+              Attached
+            </div>
+          </div>
+          <div style="color: #888; font-size: 0.85em; line-height: 1.6;">
+            Windows: build, dev-server<br>
+            Working dir: ~/projects/project-b<br>
+            Status: Currently active
+          </div>
+        </div>
+
+        <!-- Session Switching Visual -->
+        <div style="margin-top: 1.5em; padding: 1em; background: rgba(247, 118, 142, 0.1); border-left: 3px solid #f7768e; border-radius: 4px;">
+          <div style="text-align: center; font-size: 0.9em;">
+            <div style="color: #f7768e; font-weight: bold; margin-bottom: 0.5em;">
+              Quick Switch
+            </div>
+            <div style="color: #ccc; line-height: 1.8;">
+              <span class="key">prefix</span> + <span class="key">s</span>
+              <div style="margin: 0.5em 0; color: #666;">↓</div>
+              Navigate with <span class="key">j</span>/<span class="key">k</span>
+              <div style="margin: 0.5em 0; color: #666;">↓</div>
+              Press <span class="key">Enter</span> to attach
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 2em; font-size: 0.9em;">
+    <strong>Tip:</strong> Name your sessions descriptively. Use <span class="key">prefix</span> + <span class="key">$</span> to rename an existing session, or always start with <code>tmux new -s meaningful-name</code>.
+  </div>
+
+  <aside class="notes">
+    This slide demonstrates a typical multi-project workflow using tmux sessions. The key insight is that sessions persist after detaching, allowing you to switch contexts without losing your work environment.
+
+    Walk through the workflow:
+    1. Start with project-a, set up your windows and panes
+    2. Do your work - coding, testing, whatever the project requires
+    3. When you need to switch contexts, detach with prefix-d. The session continues running in the background.
+    4. Create a new session for project-b
+    5. Work on project-b
+    6. Use the session tree (prefix-s) to quickly jump between project-a and project-b
+
+    The right side shows the actual state - both sessions exist simultaneously, one detached and running in the background, one currently attached. This is the power of tmux: maintaining multiple isolated workspaces that you can switch between instantly.
+
+    Key points to emphasize:
+    - Sessions are independent: different working directories, different windows, different processes
+    - Detaching doesn't kill anything - everything keeps running
+    - The session tree provides a visual way to navigate between all your sessions
+    - Naming sessions meaningfully makes this workflow much more manageable
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 3: Sessions</h2>
+
+  <div class="exercise">
+    <ol>
+      <li>Create a new session: <code>tmux new -s work</code></li>
+      <li>Detach with <span class="key">prefix</span> + <span class="key">d</span></li>
+      <li>Create another session: <code>tmux new -s personal</code></li>
+      <li>List all sessions: <code>tmux ls</code></li>
+      <li>Use <span class="key">prefix</span> + <span class="key">s</span> to switch between sessions</li>
+      <li>Attach from outside tmux: <code>tmux attach -t work</code></li>
+    </ol>
+  </div>
+
+  <aside class="notes">
+    Practice creating and managing multiple sessions. Sessions persist when detached, allowing you to maintain separate workspaces. The prefix + s command provides an interactive session switcher, while tmux attach lets you reconnect from the terminal.
+  </aside>
+</section>
+
+        <!-- ==================== SECTION 05: WINDOWS & PANES ==================== -->
+<section>
+  <h2>Creating Splits</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">|</span></td>
+        <td>Split horizontally</td>
+        <td>Panes side-by-side</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">-</span></td>
+        <td>Split vertically</td>
+        <td>Panes stacked</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">_</span></td>
+        <td>Split vertically</td>
+        <td>Same as <span class="key">-</span> (oh-my-tmux)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; margin-top: 1.5em;">
+    <div style="text-align: center;">
+      <p style="margin-bottom: 0.5em;"><strong>Horizontal Split (<span class="key">|</span>)</strong></p>
+      <pre style="font-size: 0.7em; margin: 0 auto; display: inline-block; text-align: left;">┌─────────┬─────────┐
+│         │         │
+│ Pane 1  │ Pane 2  │
+│         │         │
+└─────────┴─────────┘</pre>
+    </div>
+
+    <div style="text-align: center;">
+      <p style="margin-bottom: 0.5em;"><strong>Vertical Split (<span class="key">-</span>)</strong></p>
+      <pre style="font-size: 0.7em; margin: 0 auto; display: inline-block; text-align: left;">┌───────────────────┐
+│      Pane 1       │
+├───────────────────┤
+│      Pane 2       │
+└───────────────────┘</pre>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Note:</strong> Splits preserve current directory
+  </div>
+
+  <aside class="notes">
+    Key concepts:
+    - Horizontal split (|) creates side-by-side panes
+    - Vertical split (- or _) creates stacked panes
+    - Split naming is based on the divider line, not the layout
+    - New panes inherit the current working directory
+    - oh-my-tmux provides both - and _ for vertical splits
+
+    Demo: Create a horizontal split, then split one pane vertically to show complex layouts
+  </aside>
+</section>
+
+<section>
+  <h2>Pane Operations</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">x</span></td><td>Kill pane (no confirm - custom)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">X</span></td><td>Kill window (no confirm - custom)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">z</span></td><td>Toggle pane zoom (fullscreen)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">!</span></td><td>Break pane into new window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">+</span></td><td>Maximize pane to new window (oh-my-tmux)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Space</span></td><td>Cycle layouts</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Pane operations for managing individual panes:
+    - Kill pane (x) and kill window (X) are customized to skip confirmation prompts
+    - Zoom (z) toggles fullscreen for the current pane - press again to unzoom
+    - Break pane (!) moves a pane to its own new window
+    - Maximize (+) is an oh-my-tmux feature similar to zoom but creates a temporary window
+    - Cycle layouts (Space) rotates through different pane arrangement presets
+  </aside>
+</section>
+
+<section>
+  <h2>Swapping Panes</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">&gt;</span></td>
+        <td>Swap current pane with next (oh-my-tmux)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">&lt;</span></td>
+        <td>Swap current pane with previous (oh-my-tmux)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Swapping panes allows you to reorder panes without recreating your layout.
+    The greater-than and less-than symbols indicate the direction of the swap.
+    These are oh-my-tmux bindings - standard tmux uses curly braces for swapping.
+  </aside>
+</section>
+
+<section>
+  <h2>Resizing Panes</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">H</span></td><td>Resize left (repeatable, oh-my-tmux)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">J</span></td><td>Resize down (repeatable)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">K</span></td><td>Resize up (repeatable)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">L</span></td><td>Resize right (repeatable)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Press prefix once, then <span class="key">H</span>/<span class="key">J</span>/<span class="key">K</span>/<span class="key">L</span> multiple times (repeat mode)
+  </div>
+
+  <aside class="notes">
+    These are custom oh-my-tmux bindings that use uppercase letters (Shift + h/j/k/l) for resizing panes. The repeat mode is very convenient - you only need to press the prefix once, then you can resize continuously by pressing H, J, K, or L multiple times without repeating the prefix each time. This makes fine-tuning pane sizes much faster.
+  </aside>
+</section>
+
+<section>
+  <h2>Layout Presets</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">Space</span></td><td>Cycle through layouts</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-1</span></td><td>Even horizontal</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-2</span></td><td>Even vertical</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-3</span></td><td>Main horizontal</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-4</span></td><td>Main vertical</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-5</span></td><td>Tiled</td></tr>
+    </tbody>
+  </table>
+  <aside class="notes">
+    Tmux provides several preset layouts that automatically arrange panes. The Space key cycles through all available layouts, which is great for experimentation. Alt-1 through Alt-5 jump directly to specific layouts: even horizontal and vertical split panes equally in their respective directions, main layouts dedicate most space to one primary pane with others arranged horizontally or vertically, and tiled creates a grid. These presets save time when you need standard arrangements quickly.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 4: Panes</h2>
+  <div class="exercise">
+    <ol>
+      <li>Split vertically: <span class="key">prefix</span> + <span class="key">|</span></li>
+      <li>Split horizontally: <span class="key">prefix</span> + <span class="key">-</span></li>
+      <li>Navigate with <span class="key">prefix</span> + <span class="key">h/j/k/l</span></li>
+      <li>Resize a pane: <span class="key">prefix</span> + <span class="key">H</span> (repeat)</li>
+      <li>Zoom a pane: <span class="key">prefix</span> + <span class="key">z</span> (toggle back)</li>
+      <li>Swap panes: <span class="key">prefix</span> + <span class="key">&gt;</span></li>
+      <li>Kill a pane: <span class="key">prefix</span> + <span class="key">x</span></li>
+    </ol>
+  </div>
+  <aside class="notes">
+    Practice creating and managing panes within a window. Start by splitting vertically, then horizontally to create multiple panes. Use vim-style navigation to move between them. Try resizing with H/J/K/L. Zoom in on a single pane with z, then toggle back. Experiment with swapping pane positions and closing individual panes.
+  </aside>
+</section>
+
+        <!-- ==================== SECTION 06: COPY MODE ==================== -->
+<section>
+  <h2>Copy Mode Overview</h2>
+
+  <p>Access scrollback history and copy text</p>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">[</span></td>
+        <td>Enter copy mode</td>
+      </tr>
+      <tr>
+        <td><span class="key">q</span> or <span class="key">Escape</span></td>
+        <td>Exit copy mode</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 2em;">
+    <h3>Navigation</h3>
+    <p>Uses <strong>vim keybindings</strong> for movement:</p>
+    <ul>
+      <li><span class="key">h</span>/<span class="key">j</span>/<span class="key">k</span>/<span class="key">l</span> - Left/Down/Up/Right</li>
+      <li><span class="key">Ctrl-u</span>/<span class="key">Ctrl-d</span> - Page up/down</li>
+      <li><span class="key">g</span>/<span class="key">G</span> - Top/Bottom of history</li>
+    </ul>
+  </div>
+
+  <div class="tip">
+    <strong>Tip:</strong> Scroll with mouse wheel automatically enters copy mode
+  </div>
+
+  <aside class="notes">
+    Copy mode is essential for accessing your scrollback buffer. Once you enter with prefix-[, you can navigate through your terminal history using vim keybindings. This is particularly useful for reviewing command output, errors, or logs that have scrolled off screen. Exit with q or Escape when done.
+  </aside>
+</section>
+
+<section>
+  <h2>Copy Mode Navigation</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">j</span> / <span class="key">k</span></td><td>Move cursor down/up (custom)</td></tr>
+      <tr><td><span class="key">h</span> / <span class="key">l</span></td><td>Move cursor left/right</td></tr>
+      <tr><td><span class="key">w</span> / <span class="key">b</span></td><td>Forward/back by word</td></tr>
+      <tr><td><span class="key">0</span> / <span class="key">$</span></td><td>Start/end of line</td></tr>
+      <tr><td><span class="key">g</span> / <span class="key">G</span></td><td>Top/bottom of buffer</td></tr>
+      <tr><td><span class="key">C-j</span> / <span class="key">C-k</span></td><td>Page down/up (custom)</td></tr>
+      <tr><td><span class="key">C-d</span> / <span class="key">C-u</span></td><td>Half-page down/up</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Copy mode navigation uses vim-style keybindings, making it familiar for vim users. The j/k and C-j/C-k bindings are custom additions. Use word motions (w/b) for faster horizontal movement, and g/G to jump to buffer extremes. Half-page scrolls (C-d/C-u) are useful for browsing long output efficiently.
+  </aside>
+</section>
+
+<section>
+  <h2>Searching in Copy Mode</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">/</span></td><td>Search forward</td></tr>
+      <tr><td><span class="key">?</span></td><td>Search backward</td></tr>
+      <tr><td><span class="key">n</span> / <span class="key">N</span></td><td>Next/previous search result</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Searching in copy mode works just like vim. Use forward slash to search forward from your cursor position, question mark to search backward. Once you've found a match, use n to jump to the next occurrence and capital N to jump to the previous one. This makes it easy to quickly find and copy specific content from your terminal history.
+  </aside>
+</section>
+
+<section>
+  <h2>Text Selection</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">v</span></td>
+        <td>Start character selection</td>
+      </tr>
+      <tr>
+        <td><span class="key">V</span></td>
+        <td>Start line selection</td>
+      </tr>
+      <tr>
+        <td><span class="key">C-v</span></td>
+        <td>Toggle rectangle (block) selection</td>
+      </tr>
+      <tr>
+        <td><span class="key">Escape</span></td>
+        <td>Cancel selection</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Use <span class="key">v</span> for precise character selection, <span class="key">V</span> for full lines, or <span class="key">C-v</span> for columnar/block selection in copy mode.
+  </div>
+
+  <aside class="notes">
+    Text selection in copy mode uses vim-style visual selection modes:
+    - Character selection (v) allows precise selection of individual characters - useful for copying specific words or partial lines
+    - Line selection (V) selects entire lines at once - ideal for copying multiple complete lines of output
+    - Rectangle/block selection (C-v) lets you select vertical columns of text - particularly useful for structured output like tables or logs
+    - Escape cancels the current selection and returns to normal copy mode navigation without exiting copy mode itself
+
+    After starting selection with any of these keys, use vim navigation (h/j/k/l or arrow keys) to expand the selection, then press Enter or y to yank (copy) the selected text to the clipboard.
+  </aside>
+</section>
+
+<section>
+  <h2>Copying & Pasting</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">y</span></td><td>Copy selection (to clipboard)</td></tr>
+      <tr><td><span class="key">Enter</span></td><td>Copy selection (alternative)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">]</span></td><td>Paste most recent</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">p</span></td><td>Paste (oh-my-tmux)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">P</span></td><td>Choose from buffer list</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">b</span></td><td>List all buffers</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip">
+    <strong>System clipboard integration:</strong> Automatic with xsel/xclip (Linux), pbcopy (macOS), clip.exe (WSL)
+  </div>
+
+  <aside class="notes">
+    tmux maintains its own clipboard called buffers. The y key copies selections to both tmux buffers and the system clipboard. Enter is an alternative copy binding. Use prefix-] or prefix-p to paste the most recent buffer. If you have multiple copied items, prefix-P lets you choose from a list. The prefix-b command shows all available buffers. System clipboard integration works automatically if you have the appropriate tools installed on your system.
+  </aside>
+</section>
+
+<section>
+  <h2>Practical Workflows</h2>
+
+  <div style="display: grid; gap: 2rem; margin-top: 2rem;">
+    <div>
+      <h3>1. Copy Terminal Output</h3>
+      <div style="display: flex; align-items: center; gap: 0.8em; font-size: 0.9em; flex-wrap: wrap;">
+        <span class="key">prefix</span> + <span class="key">[</span>
+        <span>→</span>
+        <span>navigate</span>
+        <span>→</span>
+        <span class="key">v</span>
+        <span>→</span>
+        <span>select</span>
+        <span>→</span>
+        <span class="key">y</span>
+      </div>
+    </div>
+
+    <div>
+      <h3>2. Search and Copy</h3>
+      <div style="display: flex; align-items: center; gap: 0.8em; font-size: 0.9em; flex-wrap: wrap;">
+        <span class="key">prefix</span> + <span class="key">[</span>
+        <span>→</span>
+        <code>/pattern</code>
+        <span>→</span>
+        <span class="key">n</span>
+        <span>→</span>
+        <span class="key">v</span>
+        <span>→</span>
+        <span>select</span>
+        <span>→</span>
+        <span class="key">y</span>
+      </div>
+    </div>
+
+    <div>
+      <h3>3. Copy to External App</h3>
+      <div style="display: flex; align-items: center; gap: 0.8em; font-size: 0.9em; flex-wrap: wrap;">
+        <span>Select and copy</span>
+        <span>→</span>
+        <span class="key">y</span>
+        <span>→</span>
+        <span>Automatically in system clipboard</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 2rem;">
+    <strong>Tip:</strong> All yanked text is automatically available in your system clipboard for pasting into any application
+  </div>
+
+  <aside class="notes">
+    These three workflows cover the most common copy mode use cases. First, copying terminal output - enter copy mode, navigate to what you need, start visual selection, select the text, and yank. Second, searching for specific content then copying it - use forward slash to search, n to jump between matches, then visual select and yank. Third, the clipboard integration means anything you yank in tmux is immediately available in your system clipboard for pasting into browsers, editors, or any other application. No additional steps needed.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 5: Copy Mode</h2>
+  <div class="exercise">
+    <ol>
+      <li>Run <code>ls -la /etc</code> to generate output</li>
+      <li>Enter copy mode: <span class="key">prefix</span> + <span class="key">[</span></li>
+      <li>Navigate with <span class="key">j</span>/<span class="key">k</span>, page with <span class="key">Ctrl-j</span>/<span class="key">Ctrl-k</span></li>
+      <li>Search for "passwd": type <code>/passwd</code> then <span class="key">Enter</span></li>
+      <li>Press <span class="key">n</span> to cycle through matches</li>
+      <li>Start selection with <span class="key">v</span>, extend, copy with <span class="key">y</span></li>
+      <li>Paste: <span class="key">prefix</span> + <span class="key">]</span></li>
+    </ol>
+  </div>
+  <aside class="notes">
+    Practice navigating scrollback and copying text. First generate some output with ls -la /etc. Enter copy mode with prefix + [. Use vim-style navigation (j/k for line-by-line, Ctrl-j/Ctrl-k for page up/down). Try searching with /passwd and cycling through matches with n. Select text with v, extend the selection, and yank with y. Exit copy mode and paste with prefix + ]. This workflow mimics vim's visual mode and is essential for working with terminal output.
+  </aside>
+</section>
+
+        <!-- ==================== SECTION 07: PLUGINS (TPM) ==================== -->
+<section>
+  <h2>Plugin Manager</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <!-- Left side: What is TPM -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #2196f3;">TPM (Tmux Plugin Manager)</h3>
+      <p style="font-size: 0.9em; line-height: 1.6; margin-bottom: 1.2em;">
+        TPM manages tmux plugins similar to how package managers handle dependencies. It clones, updates, and loads plugins automatically.
+      </p>
+
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <div style="font-size: 0.85em; color: #888; margin-bottom: 0.5em;">Plugins are stored in:</div>
+        <code style="font-size: 0.95em;">~/.tmux/plugins/</code>
+      </div>
+
+      <div class="tip" style="font-size: 0.85em;">
+        <strong>Tip:</strong> TPM automatically handles git cloning, updates, and loading plugins at startup.
+      </div>
+    </div>
+
+    <!-- Right side: Configuration -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #9ece6a;">Configuration</h3>
+      <p style="font-size: 0.85em; margin-bottom: 0.8em; color: #ccc;">
+        Add plugins in <code>~/.tmux.conf.local</code>:
+      </p>
+
+      <pre style="margin-bottom: 1.5em;"><code class="language-bash"># Example plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+
+# Initialize TPM (MUST be at END of file)
+run '~/.tmux/plugins/tpm/tpm'</code></pre>
+
+      <div style="background: rgba(231, 76, 60, 0.1); border-left: 3px solid #e74c3c; border-radius: 4px; padding: 1em; font-size: 0.85em;">
+        <strong style="color: #e74c3c;">Important:</strong> The TPM initialization line must be at the <strong>END</strong> of your config file, after all plugin declarations.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    TPM is the de facto plugin manager for tmux, similar to vim-plug for Vim or npm for Node.js. It simplifies plugin installation and management significantly.
+
+    Configuration is straightforward: you declare plugins using the set -g @plugin syntax in your tmux.conf.local file. Each plugin is typically a GitHub repository in the format 'user/repo'. TPM uses git to clone these repositories into ~/.tmux/plugins/.
+
+    Critical detail: The run command that initializes TPM MUST be at the very end of your config file. This is because plugins may define their own settings and keybindings, and TPM needs to load them after your base configuration but before tmux finishes initialization.
+  </aside>
+</section>
+
+<section>
+  <h2>Defining Plugins</h2>
+
+  <div style="font-size: 0.9em; margin-top: 1.5em;">
+    <p style="margin-bottom: 1.2em; line-height: 1.6;">
+      Add plugins in <code>~/.tmux.conf.local</code> using TPM (Tmux Plugin Manager):
+    </p>
+
+    <pre><code class="language-bash"># In tmux.conf.local
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# MUST be last line
+run '~/.tmux/plugins/tpm/tpm'</code></pre>
+
+    <div style="margin-top: 1.5em; padding: 1em; background: #1a1a1a; border-radius: 8px; border: 1px solid #444;">
+      <h3 style="font-size: 1em; margin-bottom: 0.8em; color: #2196f3;">Plugin Format</h3>
+      <p style="line-height: 1.6; margin-bottom: 0.6em;">
+        Plugins use GitHub repository format:
+      </p>
+      <div style="text-align: center; font-family: monospace; font-size: 1.1em; padding: 0.5em;">
+        <code style="color: #4caf50;">'github-user/repo-name'</code>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top: 1.5em;">
+      <strong>Tip:</strong> After adding plugins, press <span class="key">prefix + I</span> (capital I) to install them
+    </div>
+  </div>
+
+  <aside class="notes">
+    Plugin definitions are added in tmux.conf.local using the set -g @plugin syntax. The format is straightforward: GitHub username followed by repository name.
+
+    Key points to emphasize:
+    - TPM itself must be listed as a plugin
+    - The run command at the end is critical - it initializes TPM and loads all plugins
+    - This run command MUST be the last line in your config
+    - After adding new plugins, use prefix + I (capital I) to install them
+    - Use prefix + U to update plugins
+  </aside>
+</section>
+
+<section>
+  <h2>Installed Plugins</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Plugin</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>tmux-sensible</strong></td>
+        <td>Sane defaults (scrollback, escape handling)</td>
+      </tr>
+      <tr>
+        <td><strong>tmux-resurrect</strong></td>
+        <td>Save/restore sessions, windows, panes</td>
+      </tr>
+      <tr>
+        <td><strong>tmux-continuum</strong></td>
+        <td>Auto-save every 15 min, auto-restore on start</td>
+      </tr>
+    </tbody>
+  </table>
+  <aside class="notes">
+    This configuration includes three essential plugins managed by tpm (Tmux Plugin Manager).
+
+    tmux-sensible provides universal settings that most users want: increased scrollback history, better escape-time handling, and improved mouse support.
+
+    tmux-resurrect is the core persistence plugin that saves your session state including pane layouts, window layouts, and even running programs. It can also restore Neovim sessions.
+
+    tmux-continuum builds on resurrect by automating the save/restore process. It saves your environment every 15 minutes and automatically restores your last saved environment when tmux starts, giving you true session persistence across reboots.
+  </aside>
+</section>
+
+<section>
+  <h2>Plugin Configuration</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Resurrect & Continuum Settings</h3>
+      <pre><code class="language-bash"># Resurrect settings
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'
+
+# Continuum settings
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'</code></pre>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Configuration Reference</h3>
+      <table style="font-size: 0.8em;">
+        <thead>
+          <tr>
+            <th>Setting</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>@resurrect-capture-pane-contents</code></td>
+            <td>Saves visible pane text</td>
+          </tr>
+          <tr>
+            <td><code>@resurrect-strategy-nvim</code></td>
+            <td>Restores Neovim sessions</td>
+          </tr>
+          <tr>
+            <td><code>@continuum-restore</code></td>
+            <td>Auto-restore on tmux start</td>
+          </tr>
+          <tr>
+            <td><code>@continuum-save-interval</code></td>
+            <td>Save every 15 minutes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Add these settings to <code>~/.tmux.conf.local</code> after the plugin declarations. Reload with <span class="key">prefix + r</span> to apply changes.
+  </div>
+
+  <aside class="notes">
+    These plugin settings enhance tmux-resurrect and tmux-continuum functionality. The resurrect-capture-pane-contents option saves the actual text visible in your panes, not just the program running. The resurrect-strategy-nvim setting tells resurrect how to properly save and restore Neovim sessions.
+
+    For continuum, setting continuum-restore to 'on' means your last saved session will automatically restore when you start tmux. The continuum-save-interval of 15 minutes means continuum will automatically save your session state in the background.
+  </aside>
+</section>
+
+<section>
+  <h2>Managing Plugins</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Plugin Commands</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="key">prefix + I</span></td>
+            <td>Install new plugins</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix + U</span></td>
+            <td>Update all plugins</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix + Alt-u</span></td>
+            <td>Remove unused plugins</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #9ece6a;">Installation Workflow</h3>
+      <ol style="font-size: 0.9em; line-height: 1.8;">
+        <li>Add <code>set -g @plugin '...'</code> to config</li>
+        <li>Reload: <span class="key">prefix + r</span></li>
+        <li>Install: <span class="key">prefix + I</span></li>
+      </ol>
+
+      <div class="tip" style="margin-top: 1.5em; font-size: 0.85em;">
+        <strong>Tip:</strong> Use capital <span class="key">I</span> for install, capital <span class="key">U</span> for update.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    TPM (Tmux Plugin Manager) makes plugin management straightforward. After adding a plugin line to your config, reload the configuration, then press prefix + I (capital I) to fetch and install. Updates are just as simple with prefix + U. The Alt-u combination helps clean up plugins you've removed from config.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 6: Plugins</h2>
+
+  <div class="exercise">
+    <ol>
+      <li>Check installed plugins: <code>ls ~/.tmux/plugins/</code></li>
+      <li>View plugin settings: <code>tmux show-options -g | grep @</code></li>
+      <li>Update all plugins: <span class="key">prefix + U</span></li>
+    </ol>
+  </div>
+
+  <aside class="notes">
+    Plugins extend tmux functionality. TPM (Tmux Plugin Manager) manages installation and updates.
+
+    Common plugins include tmux-resurrect (session persistence), tmux-yank (clipboard integration), and tmux-sensible (better defaults).
+
+    Plugin settings use the @ prefix convention. These are user-defined options that plugins read.
+  </aside>
+</section>
+
+        <!-- ==================== SECTION 08: SESSION PERSISTENCE ==================== -->
+<section>
+  <h2>tmux-resurrect</h2>
+  <p>Save and restore your tmux environment manually</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix + Ctrl-s</span></td>
+        <td>Save session</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + Ctrl-r</span></td>
+        <td>Restore session</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip">
+    <strong>Tip:</strong> Use manual save before major changes or system reboots to preserve your exact session state
+  </div>
+
+  <aside class="notes">
+    tmux-resurrect is a plugin that captures and restores your entire tmux environment.
+
+    When you save with prefix + Ctrl-s, it captures:
+    - All sessions, windows, and panes
+    - Window and pane layouts
+    - Current working directories
+    - Pane contents (scrollback history)
+    - Neovim sessions (with proper strategy)
+
+    When you restore with prefix + Ctrl-r, everything is recreated exactly as it was.
+
+    Note: Running processes are NOT preserved - you'll need to restart them manually.
+    Environment variables and SSH connections also don't persist.
+  </aside>
+</section>
+
+<section>
+  <h2>What Gets Saved?</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5em; align-items: start; margin-top: 1.5em; font-size: 0.95em;">
+    <!-- Preserved column -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1.2em; color: #4caf50;">Preserved</h3>
+
+      <div style="background: rgba(76, 175, 80, 0.05); border-left: 4px solid #4caf50; border-radius: 4px; padding: 1.2em;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>All sessions, windows, panes</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Window/pane layouts</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Current working directories</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Pane contents (scrollback)</span>
+          </li>
+          <li style="display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Neovim sessions (with strategy)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- NOT Preserved column -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1.2em; color: #ff9800;">NOT Preserved</h3>
+
+      <div style="background: rgba(255, 152, 0, 0.05); border-left: 4px solid #ff9800; border-radius: 4px; padding: 1.2em;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #ff9800; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">-</span>
+            <span>Running processes</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #ff9800; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">-</span>
+            <span>Environment variables</span>
+          </li>
+          <li style="display: flex; align-items: flex-start;">
+            <span style="color: #ff9800; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">-</span>
+            <span>SSH connections</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+        <strong>Tip:</strong> Processes must be restarted manually after restoration
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    tmux-resurrect saves the static aspects of your session: the directory structure, window/pane organization, and even the visible text in your panes (if capture-pane-contents is enabled).
+
+    What resurrect cannot save are dynamic elements like running processes. If you had a build running, a server listening, or any long-running command, you'll need to restart it.
+
+    Environment variables are not persisted either, so any session-specific variables you set will need to be re-exported. SSH connections will be closed and need to be re-established.
+
+    The Neovim strategy is special: resurrect can save Neovim session files if you configure the strategy, allowing you to restore open files and marks within vim.
+  </aside>
+</section>
+
+<section>
+  <h2>Resurrect Configuration</h2>
+
+  <pre><code class="language-bash">set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'</code></pre>
+
+  <div style="margin-top: 2rem; text-align: left;">
+    <h4>What These Settings Do:</h4>
+    <ul>
+      <li><code>@resurrect-capture-pane-contents</code>: Saves visible terminal output when saving a session</li>
+      <li><code>@resurrect-strategy-nvim</code>: Uses session-based restoration for Neovim instead of reopening empty instances</li>
+    </ul>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5rem;">
+    <strong>Tip:</strong> The Neovim strategy is essential - without it, <code>tmux-resurrect</code> will spawn new empty Neovim windows instead of restoring your actual editing sessions.
+  </div>
+
+  <aside class="notes">
+    These two settings configure how tmux-resurrect handles session preservation. The pane-contents setting captures what's visible on screen, useful for recovering recent terminal output. The Neovim strategy is critical: it tells tmux-resurrect to save Neovim's session file (not just the process) and restore it properly on resurrection. Without this setting, you'd get blank Neovim windows that require manual recovery.
+  </aside>
+</section>
+
+<section>
+  <h2>tmux-continuum</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <!-- Left: What continuum adds -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #2196f3;">Built on Resurrect</h3>
+      <p style="font-size: 0.9em; line-height: 1.6; margin-bottom: 1.2em;">
+        While <code>tmux-resurrect</code> requires manual saves and restores, <code>tmux-continuum</code> automates the entire process. Set it once and forget about session persistence.
+      </p>
+
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <div style="font-size: 0.85em; color: #888; margin-bottom: 0.8em;">Key Features</div>
+        <div style="font-size: 0.9em; line-height: 1.8;">
+          <div style="margin-bottom: 0.6em;">
+            <strong style="color: #4caf50;">Auto-save</strong>
+            <div style="font-size: 0.85em; color: #aaa;">Every 15 minutes</div>
+          </div>
+          <div>
+            <strong style="color: #4caf50;">Auto-restore</strong>
+            <div style="font-size: 0.85em; color: #aaa;">On first tmux start</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Configuration -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #9ece6a;">Configuration</h3>
+      <p style="font-size: 0.9em; margin-bottom: 1em; color: #ccc;">
+        Add to <code>~/.tmux.conf.local</code>:
+      </p>
+
+      <pre style="margin-bottom: 1.5em;"><code class="language-bash"># Enable auto-restore on tmux start
+set -g @continuum-restore 'on'
+
+# Set save interval (in minutes)
+set -g @continuum-save-interval '15'</code></pre>
+
+      <div class="tip">
+        <strong>Tip:</strong> This is truly "set and forget" - continuum runs in the background without requiring manual intervention.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    tmux-continuum is an optional layer on top of tmux-resurrect that completely automates session persistence. While resurrect lets you manually save and restore sessions with prefix + Ctrl-s and prefix + Ctrl-r, continuum handles this automatically.
+
+    The plugin saves your entire tmux environment every 15 minutes in the background. When tmux starts, it automatically restores the last saved state. This means your sessions survive system reboots, SSH disconnections, and terminal closures completely transparently.
+  </aside>
+</section>
+
+<section>
+  <h2>Save and Quit</h2>
+
+  <table style="margin-top: 1.5em;">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">Q</span></td>
+        <td>Save session and quit</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; margin-top: 2em; align-items: start;">
+    <!-- Left: Workflow explanation -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #7aa2f7;">Workflow</h3>
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; font-size: 0.9em; line-height: 1.8;">
+        <div style="margin-bottom: 1em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">What It Does</div>
+          <ul style="margin: 0; padding-left: 1.2em;">
+            <li>Saves session state automatically</li>
+            <li>Preserves all windows, panes, directories</li>
+            <li>Cleanly exits tmux server</li>
+          </ul>
+        </div>
+        <div style="margin-top: 1em; padding: 0.8em; background: rgba(33, 150, 243, 0.1); border-left: 3px solid #2196f3; border-radius: 4px;">
+          <div style="color: #2196f3; font-weight: bold; margin-bottom: 0.3em;">Equivalent To:</div>
+          <div style="font-size: 0.85em; color: #ccc;">
+            <code style="display: block; margin-bottom: 0.3em;">prefix + Ctrl-s</code>
+            <div style="color: #888;">then</div>
+            <code style="display: block; margin-top: 0.3em;">tmux kill-server</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: When to use -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #7aa2f7;">When to Use</h3>
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; font-size: 0.9em; line-height: 1.8;">
+        <ul style="margin: 0; padding-left: 1.2em;">
+          <li style="margin-bottom: 0.8em;">
+            <strong style="color: #f7768e;">End of workday</strong>
+            <div style="color: #888; font-size: 0.9em; margin-top: 0.2em;">Save your session before leaving</div>
+          </li>
+          <li style="margin-bottom: 0.8em;">
+            <strong style="color: #f7768e;">Before system reboot</strong>
+            <div style="color: #888; font-size: 0.9em; margin-top: 0.2em;">Preserve state across restart</div>
+          </li>
+          <li>
+            <strong style="color: #f7768e;">Clean exit</strong>
+            <div style="color: #888; font-size: 0.9em; margin-top: 0.2em;">Instead of killing server manually</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    The save-and-quit binding (prefix + Q) is a convenience that combines two operations: saving the session state with prefix + Ctrl-s, then immediately terminating the tmux server.
+
+    This is particularly useful at the end of a workday when you want to ensure your session is saved and properly closed. It's also helpful before system reboots.
+
+    This is a custom binding defined in the config - not a standard tmux binding.
+  </aside>
+</section>
+
+<section>
+  <h2>Full Restart Workflow</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr; gap: 2em; margin-top: 2em;">
+    <!-- Step-by-step workflow -->
+    <div style="font-size: 1.1em;">
+      <ol style="list-style-position: outside; padding-left: 2em; line-height: 2.2;">
+        <li style="margin-bottom: 1.5em;">
+          <strong>Save:</strong> <span class="key">prefix + Ctrl-s</span>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            (or let continuum auto-save every 15 min)
+          </div>
+        </li>
+
+        <li style="margin-bottom: 1.5em;">
+          <strong>Kill tmux:</strong> <code>tmux kill-server</code>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            Terminates all sessions and processes
+          </div>
+        </li>
+
+        <li style="margin-bottom: 1.5em;">
+          <strong>Start tmux:</strong> <code>tmux</code>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            Launch a fresh tmux session
+          </div>
+        </li>
+
+        <li style="margin-bottom: 0;">
+          <strong>Auto-restore:</strong>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            Continuum automatically restores sessions (or manually: <span class="key">prefix + Ctrl-r</span>)
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Visual flow diagram -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 1.5em; margin-top: 1.5em; flex-wrap: wrap;">
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #4caf50; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Save</div>
+        <div style="font-size: 1.1em; color: #4caf50; margin-top: 0.3em;">1</div>
+      </div>
+
+      <div style="color: #666; font-size: 1.5em;">-></div>
+
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #f44336; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Kill</div>
+        <div style="font-size: 1.1em; color: #f44336; margin-top: 0.3em;">2</div>
+      </div>
+
+      <div style="color: #666; font-size: 1.5em;">-></div>
+
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #2196f3; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Start</div>
+        <div style="font-size: 1.1em; color: #2196f3; margin-top: 0.3em;">3</div>
+      </div>
+
+      <div style="color: #666; font-size: 1.5em;">-></div>
+
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #4caf50; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Restore</div>
+        <div style="font-size: 1.1em; color: #4caf50; margin-top: 0.3em;">4</div>
+      </div>
+    </div>
+
+    <!-- Key highlight: Step 4 is automatic -->
+    <div class="tip" style="margin-top: 1.5em;">
+      <strong>Tip:</strong> Step 4 happens automatically thanks to continuum! Your sessions are restored exactly as they were when you start tmux again.
+    </div>
+  </div>
+
+  <aside class="notes">
+    This is the full restart workflow for tmux demonstrating session persistence.
+
+    Walk through each step:
+    1. Save the session manually with prefix + Ctrl-s. If you have continuum enabled (which saves every 15 minutes), you might not need to do this manually.
+    2. Kill the entire tmux server with tmux kill-server. This terminates all sessions and their associated processes.
+    3. Start a fresh tmux instance with the tmux command from your shell.
+    4. Continuum automatically restores all your sessions from the last saved state. All your windows, panes, working directories, and even Neovim sessions are back exactly as they were.
+  </aside>
+</section>
+
+<section>
+  <h2>Troubleshooting</h2>
+
+  <div style="margin: 1.5em auto; padding: 1.2em; background: #1a1a1a; border-left: 4px solid #2196F3; text-align: left; max-width: 600px; border-radius: 4px;">
+    <strong>Session Save Location:</strong>
+    <p style="font-family: monospace; margin: 0.8em 0; font-size: 0.95em;">~/.tmux/resurrect/</p>
+    <p style="font-size: 0.85em; color: #888; margin: 0.5em 0;">Sessions are saved after each manual save or auto-save</p>
+  </div>
+
+  <h3 style="margin-top: 1.5em;">Finding Your Sessions</h3>
+
+  <p><strong>The <code>last</code> symlink:</strong> Always points to your most recent session save</p>
+
+  <p>Check saved sessions with:</p>
+  <pre><code class="language-bash">ls ~/.tmux/resurrect/</code></pre>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> If restore fails, check the file timestamps with <code>ls -lt ~/.tmux/resurrect/</code> to verify which save file is most recent and has content.
+  </div>
+
+  <aside class="notes">
+    Session files are stored in the resurrect directory and persist between tmux restarts. Each save includes full pane content, window layout, and history.
+
+    If a restore doesn't work as expected, check the file timestamps first. Sometimes old corrupt files can remain - remove them manually if needed.
+
+    Troubleshooting checklist:
+    - Check if continuum is enabled: tmux show-options -g | grep continuum
+    - Verify plugins are installed: ls ~/.tmux/plugins/
+    - Check resurrect directory exists: ls -la ~/.tmux/resurrect/
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 7: Persistence</h2>
+
+  <div class="exercise" style="margin-top: 1.5em;">
+    <ol style="font-size: 0.95em; line-height: 1.8;">
+      <li>Create a few windows and panes
+        <ul style="margin-top: 0.5em; margin-left: 1.5em;">
+          <li><span class="key">prefix + c</span> to create windows</li>
+          <li><span class="key">prefix + |</span> and <span class="key">prefix + -</span> to create panes</li>
+        </ul>
+      </li>
+      <li>Save manually: <span class="key">prefix + Ctrl-s</span></li>
+      <li>Kill tmux: <code>tmux kill-server</code></li>
+      <li>Start fresh: <code>tmux</code></li>
+      <li>Verify auto-restore (or manually: <span class="key">prefix + Ctrl-r</span>)</li>
+      <li>Check saved files: <code>ls ~/.tmux/resurrect/</code></li>
+    </ol>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+    <strong>Tip:</strong> Look for the <code>last</code> symlink in the resurrect directory - it points to your most recent save.
+  </div>
+
+  <aside class="notes">
+    This exercise demonstrates the core value proposition of tmux-resurrect and tmux-continuum: session persistence across server restarts.
+
+    Expected behavior at each step:
+    1. Creating structure establishes what will be saved (windows, panes, layouts, directories)
+    2. Manual save triggers tmux-resurrect to write session state to disk
+    3. Killing the server terminates all sessions and processes
+    4. Starting fresh tmux normally would start with empty session
+    5. Auto-restore (or manual Ctrl-r) restores the saved state
+    6. The resurrect directory contains timestamped files with session snapshots
+
+    Key insight: This demonstrates the difference between detaching (session keeps running) and killing (requires restore).
+  </aside>
+</section>
+
         <!-- Future sections will be added here -->
-        <!-- Section 02: Essential Concepts -->
-        <!-- Section 03: Navigation -->
-        <!-- Section 04: Sessions -->
-        <!-- Section 05: Windows & Panes -->
-        <!-- Section 06: Copy Mode -->
-        <!-- Section 07: Plugins -->
-        <!-- Section 08: Session Persistence -->
         <!-- Section 09: Customization -->
         <!-- Section 10: Cheat Sheet -->
 

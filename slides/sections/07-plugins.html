@@ -1,0 +1,272 @@
+<!-- ==================== SECTION 07: PLUGINS (TPM) ==================== -->
+<section>
+  <h2>Plugin Manager</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <!-- Left side: What is TPM -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #2196f3;">TPM (Tmux Plugin Manager)</h3>
+      <p style="font-size: 0.9em; line-height: 1.6; margin-bottom: 1.2em;">
+        TPM manages tmux plugins similar to how package managers handle dependencies. It clones, updates, and loads plugins automatically.
+      </p>
+
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <div style="font-size: 0.85em; color: #888; margin-bottom: 0.5em;">Plugins are stored in:</div>
+        <code style="font-size: 0.95em;">~/.tmux/plugins/</code>
+      </div>
+
+      <div class="tip" style="font-size: 0.85em;">
+        <strong>Tip:</strong> TPM automatically handles git cloning, updates, and loading plugins at startup.
+      </div>
+    </div>
+
+    <!-- Right side: Configuration -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #9ece6a;">Configuration</h3>
+      <p style="font-size: 0.85em; margin-bottom: 0.8em; color: #ccc;">
+        Add plugins in <code>~/.tmux.conf.local</code>:
+      </p>
+
+      <pre style="margin-bottom: 1.5em;"><code class="language-bash"># Example plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+
+# Initialize TPM (MUST be at END of file)
+run '~/.tmux/plugins/tpm/tpm'</code></pre>
+
+      <div style="background: rgba(231, 76, 60, 0.1); border-left: 3px solid #e74c3c; border-radius: 4px; padding: 1em; font-size: 0.85em;">
+        <strong style="color: #e74c3c;">Important:</strong> The TPM initialization line must be at the <strong>END</strong> of your config file, after all plugin declarations.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    TPM is the de facto plugin manager for tmux, similar to vim-plug for Vim or npm for Node.js. It simplifies plugin installation and management significantly.
+
+    Configuration is straightforward: you declare plugins using the set -g @plugin syntax in your tmux.conf.local file. Each plugin is typically a GitHub repository in the format 'user/repo'. TPM uses git to clone these repositories into ~/.tmux/plugins/.
+
+    Critical detail: The run command that initializes TPM MUST be at the very end of your config file. This is because plugins may define their own settings and keybindings, and TPM needs to load them after your base configuration but before tmux finishes initialization.
+  </aside>
+</section>
+
+<section>
+  <h2>Defining Plugins</h2>
+
+  <div style="font-size: 0.9em; margin-top: 1.5em;">
+    <p style="margin-bottom: 1.2em; line-height: 1.6;">
+      Add plugins in <code>~/.tmux.conf.local</code> using TPM (Tmux Plugin Manager):
+    </p>
+
+    <pre><code class="language-bash"># In tmux.conf.local
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# MUST be last line
+run '~/.tmux/plugins/tpm/tpm'</code></pre>
+
+    <div style="margin-top: 1.5em; padding: 1em; background: #1a1a1a; border-radius: 8px; border: 1px solid #444;">
+      <h3 style="font-size: 1em; margin-bottom: 0.8em; color: #2196f3;">Plugin Format</h3>
+      <p style="line-height: 1.6; margin-bottom: 0.6em;">
+        Plugins use GitHub repository format:
+      </p>
+      <div style="text-align: center; font-family: monospace; font-size: 1.1em; padding: 0.5em;">
+        <code style="color: #4caf50;">'github-user/repo-name'</code>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top: 1.5em;">
+      <strong>Tip:</strong> After adding plugins, press <span class="key">prefix + I</span> (capital I) to install them
+    </div>
+  </div>
+
+  <aside class="notes">
+    Plugin definitions are added in tmux.conf.local using the set -g @plugin syntax. The format is straightforward: GitHub username followed by repository name.
+
+    Key points to emphasize:
+    - TPM itself must be listed as a plugin
+    - The run command at the end is critical - it initializes TPM and loads all plugins
+    - This run command MUST be the last line in your config
+    - After adding new plugins, use prefix + I (capital I) to install them
+    - Use prefix + U to update plugins
+  </aside>
+</section>
+
+<section>
+  <h2>Installed Plugins</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Plugin</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>tmux-sensible</strong></td>
+        <td>Sane defaults (scrollback, escape handling)</td>
+      </tr>
+      <tr>
+        <td><strong>tmux-resurrect</strong></td>
+        <td>Save/restore sessions, windows, panes</td>
+      </tr>
+      <tr>
+        <td><strong>tmux-continuum</strong></td>
+        <td>Auto-save every 15 min, auto-restore on start</td>
+      </tr>
+      <tr>
+        <td><strong>tmux-which-key</strong></td>
+        <td>Keybinding discovery popup menus</td>
+      </tr>
+    </tbody>
+  </table>
+  <aside class="notes">
+    This configuration includes three essential plugins managed by tpm (Tmux Plugin Manager).
+
+    tmux-sensible provides universal settings that most users want: increased scrollback history, better escape-time handling, and improved mouse support.
+
+    tmux-resurrect is the core persistence plugin that saves your session state including pane layouts, window layouts, and even running programs. It can also restore Neovim sessions.
+
+    tmux-continuum builds on resurrect by automating the save/restore process. It saves your environment every 15 minutes and automatically restores your last saved environment when tmux starts, giving you true session persistence across reboots.
+  </aside>
+</section>
+
+<section>
+  <h2>Plugin Configuration</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Resurrect & Continuum Settings</h3>
+      <pre><code class="language-bash"># Resurrect settings
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'
+
+# Continuum settings
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'</code></pre>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Configuration Reference</h3>
+      <table style="font-size: 0.8em;">
+        <thead>
+          <tr>
+            <th>Setting</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>@resurrect-capture-pane-contents</code></td>
+            <td>Saves visible pane text</td>
+          </tr>
+          <tr>
+            <td><code>@resurrect-strategy-nvim</code></td>
+            <td>Restores Neovim sessions</td>
+          </tr>
+          <tr>
+            <td><code>@continuum-restore</code></td>
+            <td>Auto-restore on tmux start</td>
+          </tr>
+          <tr>
+            <td><code>@continuum-save-interval</code></td>
+            <td>Save every 15 minutes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Add these settings to <code>~/.tmux.conf.local</code> after the plugin declarations. Reload with <span class="key">prefix + r</span> to apply changes.
+  </div>
+
+  <div style="margin-top: 2em;">
+    <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Which-key Settings</h3>
+    <pre><code class="language-bash"># tmux-which-key settings
+set -g @tmux-which-key-xdg-enable 1</code></pre>
+    <p style="font-size: 0.85em; margin-top: 1em; line-height: 1.6; color: #ccc;">
+      The XDG setting enables storing configuration in standard directories (<code>~/.config/tmux</code>).
+    </p>
+    <div class="tip" style="margin-top: 1em; font-size: 0.85em;">
+      <strong>Tip:</strong> After installation, press <span class="key">prefix + Space</span> to open the which-key menu and discover tmux commands interactively.
+    </div>
+  </div>
+
+  <aside class="notes">
+    These plugin settings enhance tmux-resurrect and tmux-continuum functionality. The resurrect-capture-pane-contents option saves the actual text visible in your panes, not just the program running. The resurrect-strategy-nvim setting tells resurrect how to properly save and restore Neovim sessions.
+
+    For continuum, setting continuum-restore to 'on' means your last saved session will automatically restore when you start tmux. The continuum-save-interval of 15 minutes means continuum will automatically save your session state in the background.
+  </aside>
+</section>
+
+<section>
+  <h2>Managing Plugins</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Plugin Commands</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="key">prefix + I</span></td>
+            <td>Install new plugins</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix + U</span></td>
+            <td>Update all plugins</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix + Alt-u</span></td>
+            <td>Remove unused plugins</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #9ece6a;">Installation Workflow</h3>
+      <ol style="font-size: 0.9em; line-height: 1.8;">
+        <li>Add <code>set -g @plugin '...'</code> to config</li>
+        <li>Reload: <span class="key">prefix + r</span></li>
+        <li>Install: <span class="key">prefix + I</span></li>
+      </ol>
+
+      <div class="tip" style="margin-top: 1.5em; font-size: 0.85em;">
+        <strong>Tip:</strong> Use capital <span class="key">I</span> for install, capital <span class="key">U</span> for update.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    TPM (Tmux Plugin Manager) makes plugin management straightforward. After adding a plugin line to your config, reload the configuration, then press prefix + I (capital I) to fetch and install. Updates are just as simple with prefix + U. The Alt-u combination helps clean up plugins you've removed from config.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 6: Plugins</h2>
+
+  <div class="exercise">
+    <ol>
+      <li>Check installed plugins: <code>ls ~/.tmux/plugins/</code></li>
+      <li>View plugin settings: <code>tmux show-options -g | grep @</code></li>
+      <li>Update all plugins: <span class="key">prefix + U</span></li>
+    </ol>
+  </div>
+
+  <aside class="notes">
+    Plugins extend tmux functionality. TPM (Tmux Plugin Manager) manages installation and updates.
+
+    Common plugins include tmux-resurrect (session persistence), tmux-yank (clipboard integration), and tmux-sensible (better defaults).
+
+    Plugin settings use the @ prefix convention. These are user-defined options that plugins read.
+  </aside>
+</section>

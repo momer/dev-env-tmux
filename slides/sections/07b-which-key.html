@@ -1,0 +1,320 @@
+<!-- ==================== SECTION 07B: WHICH-KEY ==================== -->
+<section>
+  <h2>What is which-key?</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <!-- Left side: Overview -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #2196f3;">Keybinding Discovery</h3>
+      <p style="font-size: 0.9em; line-height: 1.6; margin-bottom: 1.2em;">
+        which-key displays interactive keybinding hints in a popup menu, reducing memorization and improving discoverability.
+      </p>
+
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <div style="font-size: 0.85em; color: #888; margin-bottom: 0.5em;">Open the menu:</div>
+        <div style="text-align: center; font-size: 1.2em;">
+          <span class="key">prefix</span> + <span class="key">Space</span>
+        </div>
+      </div>
+
+      <div class="tip" style="font-size: 0.85em;">
+        <strong>Tip:</strong> Navigate submenus to discover organized commands by category.
+      </div>
+    </div>
+
+    <!-- Right side: Concept -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #9ece6a;">Based on Modern Editors</h3>
+      <p style="font-size: 0.85em; margin-bottom: 0.8em; color: #ccc;">
+        Inspired by popular which-key implementations:
+      </p>
+
+      <ul style="font-size: 0.9em; line-height: 1.8; color: #ccc;">
+        <li>Emacs which-key</li>
+        <li>Neovim which-key.nvim</li>
+        <li>VSCode which-key</li>
+      </ul>
+
+      <div style="background: rgba(76, 175, 80, 0.1); border-left: 3px solid #4caf50; border-radius: 4px; padding: 1em; font-size: 0.85em; margin-top: 1.5em;">
+        <strong style="color: #4caf50;">Benefit:</strong> Less memorization, more productivity. Organized submenus make complex keybindings discoverable.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    which-key is a tmux plugin that provides a popup menu showing available keybindings, inspired by similar tools in Emacs, Neovim, and VSCode. It solves the common problem of forgetting tmux keybindings by providing interactive, contextual help.
+
+    The main trigger is prefix + Space, which opens a menu showing all available commands organized by category. Users can then navigate through submenus to discover and execute commands without memorizing every keybinding.
+
+    This approach reduces cognitive load and makes tmux more accessible to new users while still being helpful for experienced users who may not remember every binding.
+  </aside>
+</section>
+
+<section>
+  <h2>Submenus</h2>
+
+  <div style="font-size: 0.9em; margin-top: 1.5em;">
+    <p style="margin-bottom: 1.2em; line-height: 1.6;">
+      After pressing <span class="key">prefix</span> + <span class="key">Space</span>, navigate to organized command categories:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Submenu</th>
+          <th>Contents</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="key">w</span></td>
+          <td><strong>Panes</strong></td>
+          <td>Split, navigate, resize, join, kill</td>
+        </tr>
+        <tr>
+          <td><span class="key">W</span></td>
+          <td><strong>Windows</strong></td>
+          <td>New, switch, rename, kill</td>
+        </tr>
+        <tr>
+          <td><span class="key">S</span></td>
+          <td><strong>Sessions</strong></td>
+          <td>New, switch, save/restore, detach</td>
+        </tr>
+        <tr>
+          <td><span class="key">[</span></td>
+          <td><strong>Copy mode</strong></td>
+          <td>Enter, paste, buffers</td>
+        </tr>
+        <tr>
+          <td><span class="key">f</span></td>
+          <td><strong>Fuzzy finder</strong></td>
+          <td>fzf integration</td>
+        </tr>
+        <tr>
+          <td><span class="key">C</span></td>
+          <td><strong>Config</strong></td>
+          <td>Edit, reload, mouse toggle</td>
+        </tr>
+        <tr>
+          <td><span class="key">P</span></td>
+          <td><strong>Plugins</strong></td>
+          <td>Install, update, clean</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip" style="margin-top: 1.5em;">
+      <strong>Tip:</strong> Use lowercase/uppercase letter pairs for related functions (e.g., <span class="key">w</span> for panes, <span class="key">W</span> for windows).
+    </div>
+  </div>
+
+  <aside class="notes">
+    which-key organizes commands into logical submenus for better discoverability. Each submenu is accessed via a single letter after opening the which-key popup.
+
+    Key submenus include:
+    - w for pane operations (split, navigate, resize, join, kill)
+    - W for window operations (new, switch, rename, kill)
+    - S for session management (new, switch, save/restore, detach)
+    - [ for copy mode operations
+    - f for fuzzy finder integration with fzf
+    - C for configuration tasks (edit config, reload, mouse toggle)
+    - P for plugin management (install, update, clean)
+
+    The use of lowercase and uppercase letter pairs creates logical groupings - lowercase w for panes (smaller units), uppercase W for windows (larger units), uppercase S for sessions (largest units).
+  </aside>
+</section>
+
+<section>
+  <h2>Quick Actions (Top-Level)</h2>
+
+  <div style="font-size: 0.9em; margin-top: 1.5em;">
+    <p style="margin-bottom: 1.2em; line-height: 1.6;">
+      These work directly after <span class="key">prefix</span> without entering a submenu:
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em;">
+      <div>
+        <table style="font-size: 0.95em;">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="key">|</span></td>
+              <td>Split horizontal</td>
+            </tr>
+            <tr>
+              <td><span class="key">x</span></td>
+              <td>Kill pane</td>
+            </tr>
+            <tr>
+              <td><span class="key">X</span></td>
+              <td>Kill window</td>
+            </tr>
+            <tr>
+              <td><span class="key">n</span> / <span class="key">p</span></td>
+              <td>Next/prev window</td>
+            </tr>
+            <tr>
+              <td><span class="key">s</span></td>
+              <td>Switch window (fzf)</td>
+            </tr>
+            <tr>
+              <td><span class="key">a</span></td>
+              <td>Send C-a</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <table style="font-size: 0.95em;">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="key">\</span></td>
+              <td>Rotate layout</td>
+            </tr>
+            <tr>
+              <td><span class="key">g</span></td>
+              <td>Join pane vertical (fzf)</td>
+            </tr>
+            <tr>
+              <td><span class="key">G</span></td>
+              <td>Join pane horizontal (fzf)</td>
+            </tr>
+            <tr>
+              <td><span class="key">Q</span></td>
+              <td>Save & quit</td>
+            </tr>
+            <tr>
+              <td><span class="key">r</span></td>
+              <td>Reload config</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="background: rgba(76, 175, 80, 0.1); border-left: 3px solid #4caf50; border-radius: 4px; padding: 1em; font-size: 0.85em; margin-top: 1.5em;">
+      <strong style="color: #4caf50;">Quick Access:</strong> Common operations are available at the top level for speed, while less frequent commands are organized in submenus.
+    </div>
+  </div>
+
+  <aside class="notes">
+    Top-level quick actions provide immediate access to frequently used commands without navigating submenus. These are accessible directly after pressing the prefix key.
+
+    Key quick actions include:
+    - Pipe (|) for horizontal splits
+    - x/X for killing panes and windows respectively
+    - n/p for next/previous window navigation
+    - s for fuzzy window switching
+    - a for sending literal C-a (useful when prefix is C-a)
+    - Backslash for rotating pane layouts
+    - g/G for joining panes with fzf selection
+    - Q for save and quit
+    - r for reloading configuration
+
+    This two-tier approach balances speed (quick actions) with organization (submenus), making both common and advanced operations accessible.
+  </aside>
+</section>
+
+<section>
+  <h2>Configuration</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #2196f3;">Config File Location</h3>
+
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <div style="font-size: 0.85em; color: #888; margin-bottom: 0.5em;">XDG-compliant path:</div>
+        <code style="font-size: 0.9em;">~/.config/tmux-which-key/config.yaml</code>
+      </div>
+
+      <p style="font-size: 0.85em; line-height: 1.6; color: #ccc;">
+        Configuration uses YAML format for defining custom keybindings and menu layouts.
+      </p>
+
+      <div class="tip" style="font-size: 0.85em; margin-top: 1.5em;">
+        <strong>Tip:</strong> Edit config with <span class="key">prefix</span> + <span class="key">C</span> then <span class="key">e</span>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1em; margin-bottom: 1em; color: #9ece6a;">Installation</h3>
+
+      <p style="font-size: 0.85em; margin-bottom: 0.8em; color: #ccc;">
+        Installed via <code>setup.sh</code>:
+      </p>
+
+      <pre><code class="language-bash"># In tmux.conf.local
+set -g @plugin 'alexwforsythe/tmux-which-key'
+
+# XDG support enabled by default
+# Config auto-generated on first run</code></pre>
+
+      <div style="background: rgba(33, 150, 243, 0.1); border-left: 3px solid #2196f3; border-radius: 4px; padding: 1em; font-size: 0.85em; margin-top: 1.5em;">
+        <strong style="color: #2196f3;">XDG Compliant:</strong> Supports immutable and declarative operating systems by using standard XDG directories.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    which-key configuration is stored in a YAML file at the XDG-compliant location: ~/.config/tmux-which-key/config.yaml. This follows the XDG Base Directory specification, making it compatible with modern Linux distributions and immutable operating systems.
+
+    The plugin is installed via TPM like other tmux plugins. The setup.sh script handles initial installation and configuration generation. On first run, which-key automatically generates a default config.yaml based on config.example.yaml from the repository.
+
+    The XDG-compliant structure means:
+    - Config lives in $XDG_CONFIG_HOME/tmux/plugins/tmux-which-key/
+    - Data lives in $XDG_DATA_HOME/tmux/plugins/tmux-which-key/
+    - This separation makes the plugin work well with declarative configurations and immutable systems
+
+    Users can customize keybindings and menu layouts by editing the YAML config file. The quickest way to access it is through which-key itself: prefix + C then e.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise: which-key</h2>
+
+  <div class="exercise">
+    <ol>
+      <li>Press <span class="key">prefix</span> + <span class="key">Space</span> to open which-key</li>
+      <li>Navigate submenus: try <span class="key">w</span> for panes, <span class="key">W</span> for windows</li>
+      <li>Use <span class="key">prefix</span> + <span class="key">C</span> then <span class="key">e</span> to edit config</li>
+      <li>Use <span class="key">prefix</span> + <span class="key">P</span> then <span class="key">I</span> to install plugins</li>
+    </ol>
+  </div>
+
+  <div style="margin-top: 1.5em; padding: 1em; background: #1a1a1a; border-radius: 8px; border: 1px solid #444;">
+    <h3 style="font-size: 1em; margin-bottom: 0.8em; color: #2196f3;">Try These Commands</h3>
+    <ul style="font-size: 0.9em; line-height: 1.8; color: #ccc;">
+      <li>Explore the Panes submenu (<span class="key">w</span>) to see split, navigate, and resize options</li>
+      <li>Check the Sessions submenu (<span class="key">S</span>) for save/restore commands</li>
+      <li>Browse the Config submenu (<span class="key">C</span>) to see reload and mouse toggle</li>
+    </ul>
+  </div>
+
+  <aside class="notes">
+    This hands-on exercise demonstrates the core which-key workflow: opening the menu, navigating submenus, and executing commands.
+
+    Exercise breakdown:
+    1. Opening which-key with prefix + Space shows the main menu with all available categories
+    2. Navigating to the 'w' panes submenu demonstrates how commands are organized hierarchically
+    3. Using prefix + C then e shows how to access configuration through which-key itself
+    4. Using prefix + P then I demonstrates plugin management integration
+
+    Encourage students to explore different submenus to build familiarity with the organizational structure. The more they use which-key, the more they'll discover tmux capabilities they may not have known existed.
+
+    Key learning: which-key reduces the learning curve by providing contextual help and logical organization, making tmux more approachable while maintaining power-user efficiency.
+  </aside>
+</section>

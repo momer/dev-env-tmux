@@ -1,0 +1,209 @@
+<!-- ==================== SECTION 03: NAVIGATION ==================== -->
+<section>
+  <h2>Navigation Overview</h2>
+  <p>Three levels of navigation:</p>
+  <ul>
+    <li><strong>Sessions</strong> → groups of windows</li>
+    <li><strong>Windows</strong> → tabs within a session</li>
+    <li><strong>Panes</strong> → splits within a window</li>
+  </ul>
+
+  <pre style="font-size: 0.5em; text-align: left; margin-top: 40px;">
+┌─ Session: "work" ─────────────────────────────────────────────┐
+│                                                                │
+│  ┌─ Window 1: editor ──┬─ Window 2: server ─┬─ Window 3 ─┐   │
+│  │                      │                    │             │   │
+│  │  ┌─────────┬──────┐ │  ┌──────────────┐  │             │   │
+│  │  │ Pane 1  │Pane 2│ │  │   Pane 1     │  │   Pane 1    │   │
+│  │  │  vim    │ term │ │  │   npm start  │  │             │   │
+│  │  └─────────┴──────┘ │  └──────────────┘  │             │   │
+│  └──────────────────────┴────────────────────┴─────────────┘   │
+└────────────────────────────────────────────────────────────────┘
+  </pre>
+
+  <aside class="notes">
+    Navigation in tmux happens at three levels: sessions, windows, and panes. Understanding this hierarchy is essential for efficient tmux usage. Sessions contain windows, windows contain panes. You'll navigate between all three constantly.
+  </aside>
+</section>
+
+<section>
+  <h2>Session Tree <span class="key">prefix</span> + <span class="key">s</span></h2>
+
+  <p>Visual tree view of all sessions, windows, and panes</p>
+
+  <pre><code>├─ dev-env-tmux
+│  ├─ editor (3 panes)
+│  ├─ terminal
+│  └─ server
+├─ work
+│  ├─ api (2 panes)
+│  └─ frontend
+└─ dotfiles
+   └─ vim</code></pre>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">j</span> / <span class="key">k</span> or arrows</td><td>Navigate</td></tr>
+      <tr><td><span class="key">h</span> / <span class="key">l</span></td><td>Collapse / Expand</td></tr>
+      <tr><td><span class="key">Enter</span></td><td>Switch to selected</td></tr>
+      <tr><td><span class="key">x</span></td><td>Kill selected item</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    The session tree is one of the most powerful navigation features in tmux. It provides a visual overview of your entire tmux environment. Use vim-style navigation to move around, expand and collapse nodes, and quickly switch to any session, window, or pane.
+  </aside>
+</section>
+
+<section>
+  <h2>Window Navigation</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">c</span></td><td>Create new window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">n</span></td><td>Next window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">p</span></td><td>Previous window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">0-9</span></td><td>Jump to window by number</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">w</span></td><td>Window list (interactive)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">,</span></td><td>Rename current window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Tab</span></td><td>Last active window (oh-my-tmux)</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Windows are like browser tabs. Create new ones with prefix-c, navigate sequentially with n/p, or jump directly by number. The window list (prefix-w) shows all windows across all sessions. Rename windows with prefix-comma to keep things organized.
+  </aside>
+</section>
+
+<section>
+  <h2>Pane Navigation</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">h/j/k/l</span></td><td>Move between panes (vim-style)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">o</span></td><td>Cycle through panes</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">;</span></td><td>Toggle last active pane</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">q</span></td><td>Show pane numbers, press number to jump</td></tr>
+    </tbody>
+  </table>
+
+  <pre style="font-size: 0.8em; line-height: 1.3; margin-top: 2em;">
+         k (up)
+           ↑
+           |
+    h ← [pane] → l
+           |
+           ↓
+       j (down)
+  </pre>
+
+  <aside class="notes">
+    Pane navigation uses vim-style h/j/k/l keys thanks to oh-my-tmux. This makes moving between panes feel natural if you're a vim user. The prefix-q command is useful for layouts with many panes - it briefly shows numbers on each pane that you can press to jump directly.
+  </aside>
+</section>
+
+<section>
+  <h2>Mouse Navigation</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">m</span></td>
+        <td>Toggle mouse mode</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+    <div>
+      <h3>When Enabled</h3>
+      <ul>
+        <li>Click to select pane</li>
+        <li>Click window in status bar</li>
+        <li>Scroll to enter copy mode</li>
+        <li>Drag pane borders to resize</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3>When Disabled</h3>
+      <ul>
+        <li>Terminal selection works normally</li>
+        <li>Better for copy/paste with terminal</li>
+      </ul>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Mouse mode is a personal preference. When enabled, it makes tmux more intuitive for mouse users but can interfere with terminal text selection. Toggle it with prefix-m to find what works best for your workflow. Many users keep it enabled and hold Shift to bypass tmux when selecting text.
+  </aside>
+</section>
+
+<section>
+  <h2>Quick Returns</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">;</span></td>
+        <td>Last active pane</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">Tab</span></td>
+        <td>Last active window</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 2em;">
+    <h3>Workflow Example</h3>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 1em; font-size: 0.9em;">
+      <div>Work in Pane A</div>
+      <div>→</div>
+      <div>Check Pane B</div>
+      <div>→</div>
+      <div><span class="key">prefix</span> + <span class="key">;</span></div>
+      <div>→</div>
+      <div>Back to Pane A</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    These two keybindings are essential for efficient workflows. Instead of navigating through multiple panes or windows, you can quickly toggle back to where you were. This is especially useful when checking logs, running tests, or referencing documentation while coding.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 2 - Navigation</h2>
+  <div class="exercise">
+    <ol>
+      <li>Create 3 windows with <span class="key">prefix</span> + <span class="key">c</span></li>
+      <li>Navigate with <span class="key">prefix</span> + <span class="key">n</span> and <span class="key">prefix</span> + <span class="key">p</span></li>
+      <li>Use <span class="key">prefix</span> + <span class="key">1</span>, <span class="key">prefix</span> + <span class="key">2</span> to jump directly</li>
+      <li>Open session tree with <span class="key">prefix</span> + <span class="key">s</span></li>
+      <li>Navigate tree with <span class="key">j</span>/<span class="key">k</span>, expand with <span class="key">l</span></li>
+      <li>Press <span class="key">q</span> to exit tree</li>
+    </ol>
+  </div>
+  <div class="tip">
+    <strong>Bonus:</strong> Create panes and practice <span class="key">prefix</span> + <span class="key">h</span>/<span class="key">j</span>/<span class="key">k</span>/<span class="key">l</span>
+  </div>
+
+  <aside class="notes">
+    Walk through each step with the audience. Let them practice creating windows, navigating between them, and exploring the session tree. The session tree is particularly important to understand as it provides an overview of the entire tmux environment.
+  </aside>
+</section>

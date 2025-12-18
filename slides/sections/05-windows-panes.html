@@ -1,0 +1,211 @@
+<!-- ==================== SECTION 05: WINDOWS & PANES ==================== -->
+<section>
+  <h2>Creating Splits</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">|</span></td>
+        <td>Split horizontally</td>
+        <td>Panes side-by-side</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">-</span></td>
+        <td>Split vertically</td>
+        <td>Panes stacked</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">_</span></td>
+        <td>Split vertically</td>
+        <td>Same as <span class="key">-</span> (oh-my-tmux)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; margin-top: 1.5em;">
+    <div style="text-align: center;">
+      <p style="margin-bottom: 0.5em;"><strong>Horizontal Split (<span class="key">|</span>)</strong></p>
+      <pre style="font-size: 0.7em; margin: 0 auto; display: inline-block; text-align: left;">┌─────────┬─────────┐
+│         │         │
+│ Pane 1  │ Pane 2  │
+│         │         │
+└─────────┴─────────┘</pre>
+    </div>
+
+    <div style="text-align: center;">
+      <p style="margin-bottom: 0.5em;"><strong>Vertical Split (<span class="key">-</span>)</strong></p>
+      <pre style="font-size: 0.7em; margin: 0 auto; display: inline-block; text-align: left;">┌───────────────────┐
+│      Pane 1       │
+├───────────────────┤
+│      Pane 2       │
+└───────────────────┘</pre>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Note:</strong> Splits preserve current directory
+  </div>
+
+  <aside class="notes">
+    Key concepts:
+    - Horizontal split (|) creates side-by-side panes
+    - Vertical split (- or _) creates stacked panes
+    - Split naming is based on the divider line, not the layout
+    - New panes inherit the current working directory
+    - oh-my-tmux provides both - and _ for vertical splits
+
+    Demo: Create a horizontal split, then split one pane vertically to show complex layouts
+  </aside>
+</section>
+
+<section>
+  <h2>Pane Operations</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">x</span></td><td>Kill pane (no confirm - custom)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">X</span></td><td>Kill window (no confirm - custom)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">z</span></td><td>Toggle pane zoom (fullscreen)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">!</span></td><td>Break pane into new window</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">+</span></td><td>Maximize pane to new window (oh-my-tmux)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Space</span></td><td>Cycle layouts</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">\</span></td><td>Rotate/cycle layouts</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">g</span></td><td>Join pane from window (vertical, fzf)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">G</span></td><td>Join pane from window (horizontal, fzf)</td></tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Pane operations for managing individual panes:
+    - Kill pane (x) and kill window (X) are customized to skip confirmation prompts
+    - Zoom (z) toggles fullscreen for the current pane - press again to unzoom
+    - Break pane (!) moves a pane to its own new window
+    - Maximize (+) is an oh-my-tmux feature similar to zoom but creates a temporary window
+    - Cycle layouts (Space) rotates through different pane arrangement presets
+  </aside>
+</section>
+
+<section>
+  <h2>Joining Panes</h2>
+
+  <p>Join pane merges a pane from another window into the current window</p>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">g</span></td><td>Join pane vertically (stacked)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">G</span></td><td>Join pane horizontally (side-by-side)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Uses fzf popup to select source window. Opposite of <span class="key">prefix</span> + <span class="key">!</span> (break pane)
+  </div>
+
+  <aside class="notes">
+    Joining panes allows you to consolidate panes from different windows into one view.
+    - lowercase g joins vertically, creating stacked panes
+    - uppercase G joins horizontally, creating side-by-side panes
+    - An fzf popup appears to interactively select which window's pane to bring in
+    - This is the inverse operation of break pane (prefix + !) which moves a pane out to its own window
+    - Useful for reorganizing your workspace without copying commands or losing terminal state
+  </aside>
+</section>
+
+<section>
+  <h2>Swapping Panes</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">&gt;</span></td>
+        <td>Swap current pane with next (oh-my-tmux)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">&lt;</span></td>
+        <td>Swap current pane with previous (oh-my-tmux)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <aside class="notes">
+    Swapping panes allows you to reorder panes without recreating your layout.
+    The greater-than and less-than symbols indicate the direction of the swap.
+    These are oh-my-tmux bindings - standard tmux uses curly braces for swapping.
+  </aside>
+</section>
+
+<section>
+  <h2>Resizing Panes</h2>
+
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">H</span></td><td>Resize left (repeatable, oh-my-tmux)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">J</span></td><td>Resize down (repeatable)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">K</span></td><td>Resize up (repeatable)</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">L</span></td><td>Resize right (repeatable)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> Press prefix once, then <span class="key">H</span>/<span class="key">J</span>/<span class="key">K</span>/<span class="key">L</span> multiple times (repeat mode)
+  </div>
+
+  <aside class="notes">
+    These are custom oh-my-tmux bindings that use uppercase letters (Shift + h/j/k/l) for resizing panes. The repeat mode is very convenient - you only need to press the prefix once, then you can resize continuously by pressing H, J, K, or L multiple times without repeating the prefix each time. This makes fine-tuning pane sizes much faster.
+  </aside>
+</section>
+
+<section>
+  <h2>Layout Presets</h2>
+  <table>
+    <thead>
+      <tr><th>Key</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="key">prefix</span> + <span class="key">Space</span></td><td>Cycle through layouts</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-1</span></td><td>Even horizontal</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-2</span></td><td>Even vertical</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-3</span></td><td>Main horizontal</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-4</span></td><td>Main vertical</td></tr>
+      <tr><td><span class="key">prefix</span> + <span class="key">Alt-5</span></td><td>Tiled</td></tr>
+    </tbody>
+  </table>
+  <aside class="notes">
+    Tmux provides several preset layouts that automatically arrange panes. The Space key cycles through all available layouts, which is great for experimentation. Alt-1 through Alt-5 jump directly to specific layouts: even horizontal and vertical split panes equally in their respective directions, main layouts dedicate most space to one primary pane with others arranged horizontally or vertically, and tiled creates a grid. These presets save time when you need standard arrangements quickly.
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 4: Panes</h2>
+  <div class="exercise">
+    <ol>
+      <li>Split vertically: <span class="key">prefix</span> + <span class="key">|</span></li>
+      <li>Split horizontally: <span class="key">prefix</span> + <span class="key">-</span></li>
+      <li>Navigate with <span class="key">prefix</span> + <span class="key">h/j/k/l</span></li>
+      <li>Resize a pane: <span class="key">prefix</span> + <span class="key">H</span> (repeat)</li>
+      <li>Zoom a pane: <span class="key">prefix</span> + <span class="key">z</span> (toggle back)</li>
+      <li>Swap panes: <span class="key">prefix</span> + <span class="key">&gt;</span></li>
+      <li>Kill a pane: <span class="key">prefix</span> + <span class="key">x</span></li>
+    </ol>
+  </div>
+  <aside class="notes">
+    Practice creating and managing panes within a window. Start by splitting vertically, then horizontally to create multiple panes. Use vim-style navigation to move between them. Try resizing with H/J/K/L. Zoom in on a single pane with z, then toggle back. Experiment with swapping pane positions and closing individual panes.
+  </aside>
+</section>

@@ -1,0 +1,391 @@
+<!-- ==================== SECTION 04: SESSIONS ==================== -->
+<section>
+  <h2>Session Management</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #2196f3;">From Shell</h3>
+      <table style="font-size: 0.85em;">
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>tmux new -s name</code></td>
+            <td>Create named session</td>
+          </tr>
+          <tr>
+            <td><code>tmux attach -t name</code></td>
+            <td>Attach to session</td>
+          </tr>
+          <tr>
+            <td><code>tmux ls</code></td>
+            <td>List all sessions</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #9ece6a;">From Tmux</h3>
+      <table style="font-size: 0.85em;">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">C-c</span></td>
+            <td>Create new session</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">d</span></td>
+            <td>Detach from session</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">$</span></td>
+            <td>Rename session</td>
+          </tr>
+          <tr>
+            <td><span class="key">prefix</span> + <span class="key">s</span></td>
+            <td>Session tree</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-top: 2em; padding: 1.2em; background: #1a1a1a; border-radius: 8px; border: 1px solid #444;">
+    <h3 style="font-size: 1em; margin-bottom: 0.8em; color: #f7768e;">Common Workflow</h3>
+    <div style="display: flex; align-items: center; justify-content: space-around; font-size: 0.85em; line-height: 1.8;">
+      <div style="text-align: center;">
+        <code style="display: block; margin-bottom: 0.3em;">tmux new -s work</code>
+        <div style="color: #888; font-size: 0.9em;">Create session</div>
+      </div>
+      <div style="color: #666; font-size: 1.5em;">→</div>
+      <div style="text-align: center;">
+        <span class="key" style="display: inline-block; margin-bottom: 0.3em;">prefix + d</span>
+        <div style="color: #888; font-size: 0.9em;">Detach</div>
+      </div>
+      <div style="color: #666; font-size: 1.5em;">→</div>
+      <div style="text-align: center;">
+        <code style="display: block; margin-bottom: 0.3em;">tmux attach -t work</code>
+        <div style="color: #888; font-size: 0.9em;">Reattach later</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+    <strong>Tip:</strong> Sessions persist after detach. Use <code>tmux ls</code> to see all running sessions, even after closing your terminal or SSH disconnecting.
+  </div>
+
+  <aside class="notes">
+    Session management is tmux's killer feature. Sessions persist in the background after you detach, which means your work continues even if your terminal closes or your SSH connection drops.
+
+    From the shell, you create named sessions with "tmux new -s name", attach to existing ones with "tmux attach -t name", and list all sessions with "tmux ls". From within tmux, you can create new sessions with prefix + Ctrl-c (oh-my-tmux binding), detach with prefix + d, rename with prefix + $, and use the session tree (prefix + s) to navigate between sessions.
+
+    The typical workflow: create a session for a project, do your work, detach when switching contexts, then reattach later. Sessions keep all windows, panes, and their state intact. Combined with tmux-continuum, your sessions auto-save and restore even after system reboots.
+
+    Think of sessions as project workspaces that never go away unless you explicitly kill them.
+  </aside>
+</section>
+
+<section>
+  <h2>Session Navigation</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">s</span></td>
+        <td>Session tree (visual browser)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">C-f</span></td>
+        <td>Find session by name (oh-my-tmux)</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">(</span></td>
+        <td>Switch to previous session</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">)</span></td>
+        <td>Switch to next session</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> The session tree (<span class="key">prefix</span> + <span class="key">s</span>) provides the most visual and intuitive way to navigate between sessions, showing all sessions, windows, and panes in a hierarchical view.
+  </div>
+
+  <aside class="notes">
+    Session navigation is essential when working with multiple projects. The session tree is the most powerful option - it shows all sessions, windows, and panes in an expandable tree view. Use j/k to navigate, Enter to switch. The C-f binding from oh-my-tmux lets you search sessions by name, useful when you have many sessions. The parenthesis bindings provide quick sequential navigation similar to window navigation with n/p.
+  </aside>
+</section>
+
+<section>
+  <h2>Detach vs Kill</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; margin-top: 2em;">
+    <!-- Detach Column -->
+    <div style="background: rgba(46, 204, 113, 0.1); border: 2px solid #2ecc71; border-radius: 8px; padding: 1.5em;">
+      <h3 style="color: #2ecc71; margin-top: 0;">Detach</h3>
+      <p style="font-size: 0.9em; margin-bottom: 1.5em;">Session keeps running in background</p>
+
+      <div style="background: #1a1a1a; padding: 1em; border-radius: 8px; border: 1px solid #444; text-align: center; margin-bottom: 1em;">
+        <span class="key">prefix</span> + <span class="key">d</span>
+      </div>
+
+      <ul style="font-size: 0.85em; line-height: 1.8;">
+        <li>Processes continue running</li>
+        <li>Can reattach anytime</li>
+        <li>Session persists on server</li>
+      </ul>
+    </div>
+
+    <!-- Kill Column -->
+    <div style="background: rgba(231, 76, 60, 0.1); border: 2px solid #e74c3c; border-radius: 8px; padding: 1.5em;">
+      <h3 style="color: #e74c3c; margin-top: 0;">Kill</h3>
+      <p style="font-size: 0.9em; margin-bottom: 1.5em;">Session and all processes terminated</p>
+
+      <div style="background: #1a1a1a; padding: 0.8em; border-radius: 8px; border: 1px solid #444; font-size: 0.85em; margin-bottom: 1em;">
+        <code>tmux kill-session -t name</code>
+      </div>
+
+      <ul style="font-size: 0.85em; line-height: 1.8;">
+        <li>All processes stopped</li>
+        <li>Session removed permanently</li>
+        <li>Cannot reattach</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Commands Table -->
+  <div style="margin-top: 2em;">
+    <h3 style="font-size: 1.1em; margin-bottom: 0.8em;">Kill Commands</h3>
+    <table style="font-size: 0.85em;">
+      <thead>
+        <tr>
+          <th>Command</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>tmux kill-session -t name</code></td>
+          <td>Kill specific session</td>
+        </tr>
+        <tr>
+          <td><code>tmux kill-server</code></td>
+          <td>Kill all sessions</td>
+        </tr>
+        <tr>
+          <td><span class="key">prefix</span> + <span class="key">Q</span></td>
+          <td>Save session and quit (custom)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+    <strong>Tip:</strong> Always detach unless you're done with the session. Detaching preserves your work environment for later.
+  </div>
+
+  <aside class="notes">
+    The distinction between detach and kill is fundamental to tmux usage.
+
+    Detaching is the normal way to leave a tmux session. When you detach with prefix-d, the session continues running in the background. All processes keep running, windows stay open, and you can reattach later exactly where you left off. This is one of tmux's core features - persistent sessions that survive SSH disconnections and terminal closes.
+
+    Killing a session terminates it permanently. All processes in that session are stopped, windows are closed, and the session is removed from the tmux server. Use kill-session when you're truly done with a project or need to clean up old sessions.
+
+    The kill-server command is nuclear - it terminates the entire tmux server and all sessions. Use with caution.
+
+    The custom prefix-Q binding is from tmux-resurrect or tmux-continuum - it saves the session state before quitting, allowing you to restore it later.
+
+    Best practice: Make detaching your default. Only kill sessions when you're certain you won't need them again.
+  </aside>
+</section>
+
+<section>
+  <h2>Session Workflow</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3em; align-items: start; margin-top: 2em;">
+    <!-- Left side: Step-by-step workflow -->
+    <div style="font-size: 0.85em;">
+      <h3 style="color: #7aa2f7; margin-bottom: 1em;">Multi-Project Workflow</h3>
+
+      <div style="background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444; font-family: 'JetBrains Mono', monospace;">
+        <!-- Step 1 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            1. Start session for Project A
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px;">
+            <code>tmux new -s project-a</code>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            2. Do work...
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; color: #666;">
+            <code>git clone ..., npm install, etc.</code>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #bb9af7; font-weight: bold; margin-bottom: 0.5em;">
+            3. Detach when switching contexts
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; text-align: center;">
+            <span class="key">prefix</span> + <span class="key">d</span>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            4. Start session for Project B
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px;">
+            <code>tmux new -s project-b</code>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div style="margin-bottom: 1.5em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">
+            5. Do work...
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; color: #666;">
+            <code>vim, make build, tests, etc.</code>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div>
+          <div style="color: #f7768e; font-weight: bold; margin-bottom: 0.5em;">
+            6. Use session tree to switch
+          </div>
+          <div style="padding: 0.6em; background: #0d0d0d; border-radius: 4px; text-align: center;">
+            <span class="key">prefix</span> + <span class="key">s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side: Visual representation -->
+    <div style="font-size: 0.85em;">
+      <h3 style="color: #7aa2f7; margin-bottom: 1em;">Session State</h3>
+
+      <div style="background: #1a1a1a; padding: 1.5em; border-radius: 8px; border: 1px solid #444;">
+        <!-- Project A Session -->
+        <div style="margin-bottom: 2em; padding: 1em; border: 2px solid #9ece6a; border-radius: 6px; background: rgba(158, 206, 106, 0.05);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8em;">
+            <div style="color: #9ece6a; font-weight: bold; font-size: 1.1em;">
+              Session: project-a
+            </div>
+            <div style="background: rgba(158, 206, 106, 0.2); padding: 0.3em 0.8em; border-radius: 4px; font-size: 0.8em; color: #9ece6a;">
+              Detached
+            </div>
+          </div>
+          <div style="color: #888; font-size: 0.85em; line-height: 1.6;">
+            Windows: editor, tests, logs<br>
+            Working dir: ~/projects/project-a<br>
+            Status: Running in background
+          </div>
+        </div>
+
+        <!-- Project B Session -->
+        <div style="padding: 1em; border: 2px solid #2196f3; border-radius: 6px; background: rgba(33, 150, 243, 0.05);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8em;">
+            <div style="color: #2196f3; font-weight: bold; font-size: 1.1em;">
+              Session: project-b
+            </div>
+            <div style="background: rgba(33, 150, 243, 0.2); padding: 0.3em 0.8em; border-radius: 4px; font-size: 0.8em; color: #2196f3;">
+              Attached
+            </div>
+          </div>
+          <div style="color: #888; font-size: 0.85em; line-height: 1.6;">
+            Windows: build, dev-server<br>
+            Working dir: ~/projects/project-b<br>
+            Status: Currently active
+          </div>
+        </div>
+
+        <!-- Session Switching Visual -->
+        <div style="margin-top: 1.5em; padding: 1em; background: rgba(247, 118, 142, 0.1); border-left: 3px solid #f7768e; border-radius: 4px;">
+          <div style="text-align: center; font-size: 0.9em;">
+            <div style="color: #f7768e; font-weight: bold; margin-bottom: 0.5em;">
+              Quick Switch
+            </div>
+            <div style="color: #ccc; line-height: 1.8;">
+              <span class="key">prefix</span> + <span class="key">s</span>
+              <div style="margin: 0.5em 0; color: #666;">↓</div>
+              Navigate with <span class="key">j</span>/<span class="key">k</span>
+              <div style="margin: 0.5em 0; color: #666;">↓</div>
+              Press <span class="key">Enter</span> to attach
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top: 2em; font-size: 0.9em;">
+    <strong>Tip:</strong> Name your sessions descriptively. Use <span class="key">prefix</span> + <span class="key">$</span> to rename an existing session, or always start with <code>tmux new -s meaningful-name</code>.
+  </div>
+
+  <aside class="notes">
+    This slide demonstrates a typical multi-project workflow using tmux sessions. The key insight is that sessions persist after detaching, allowing you to switch contexts without losing your work environment.
+
+    Walk through the workflow:
+    1. Start with project-a, set up your windows and panes
+    2. Do your work - coding, testing, whatever the project requires
+    3. When you need to switch contexts, detach with prefix-d. The session continues running in the background.
+    4. Create a new session for project-b
+    5. Work on project-b
+    6. Use the session tree (prefix-s) to quickly jump between project-a and project-b
+
+    The right side shows the actual state - both sessions exist simultaneously, one detached and running in the background, one currently attached. This is the power of tmux: maintaining multiple isolated workspaces that you can switch between instantly.
+
+    Key points to emphasize:
+    - Sessions are independent: different working directories, different windows, different processes
+    - Detaching doesn't kill anything - everything keeps running
+    - The session tree provides a visual way to navigate between all your sessions
+    - Naming sessions meaningfully makes this workflow much more manageable
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 3: Sessions</h2>
+
+  <div class="exercise">
+    <ol>
+      <li>Create a new session: <code>tmux new -s work</code></li>
+      <li>Detach with <span class="key">prefix</span> + <span class="key">d</span></li>
+      <li>Create another session: <code>tmux new -s personal</code></li>
+      <li>List all sessions: <code>tmux ls</code></li>
+      <li>Use <span class="key">prefix</span> + <span class="key">s</span> to switch between sessions</li>
+      <li>Attach from outside tmux: <code>tmux attach -t work</code></li>
+    </ol>
+  </div>
+
+  <aside class="notes">
+    Practice creating and managing multiple sessions. Sessions persist when detached, allowing you to maintain separate workspaces. The prefix + s command provides an interactive session switcher, while tmux attach lets you reconnect from the terminal.
+  </aside>
+</section>

@@ -1,0 +1,417 @@
+<!-- ==================== SECTION 08: SESSION PERSISTENCE ==================== -->
+<section>
+  <h2>tmux-resurrect</h2>
+  <p>Save and restore your tmux environment manually</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix + Ctrl-s</span></td>
+        <td>Save session</td>
+      </tr>
+      <tr>
+        <td><span class="key">prefix + Ctrl-r</span></td>
+        <td>Restore session</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip">
+    <strong>Tip:</strong> Use manual save before major changes or system reboots to preserve your exact session state
+  </div>
+
+  <aside class="notes">
+    tmux-resurrect is a plugin that captures and restores your entire tmux environment.
+
+    When you save with prefix + Ctrl-s, it captures:
+    - All sessions, windows, and panes
+    - Window and pane layouts
+    - Current working directories
+    - Pane contents (scrollback history)
+    - Neovim sessions (with proper strategy)
+
+    When you restore with prefix + Ctrl-r, everything is recreated exactly as it was.
+
+    Note: Running processes are NOT preserved - you'll need to restart them manually.
+    Environment variables and SSH connections also don't persist.
+  </aside>
+</section>
+
+<section>
+  <h2>What Gets Saved?</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5em; align-items: start; margin-top: 1.5em; font-size: 0.95em;">
+    <!-- Preserved column -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1.2em; color: #4caf50;">Preserved</h3>
+
+      <div style="background: rgba(76, 175, 80, 0.05); border-left: 4px solid #4caf50; border-radius: 4px; padding: 1.2em;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>All sessions, windows, panes</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Window/pane layouts</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Current working directories</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Pane contents (scrollback)</span>
+          </li>
+          <li style="display: flex; align-items: flex-start;">
+            <span style="color: #4caf50; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">+</span>
+            <span>Neovim sessions (with strategy)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- NOT Preserved column -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1.2em; color: #ff9800;">NOT Preserved</h3>
+
+      <div style="background: rgba(255, 152, 0, 0.05); border-left: 4px solid #ff9800; border-radius: 4px; padding: 1.2em;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #ff9800; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">-</span>
+            <span>Running processes</span>
+          </li>
+          <li style="margin-bottom: 1em; display: flex; align-items: flex-start;">
+            <span style="color: #ff9800; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">-</span>
+            <span>Environment variables</span>
+          </li>
+          <li style="display: flex; align-items: flex-start;">
+            <span style="color: #ff9800; font-weight: bold; margin-right: 0.8em; font-size: 1.2em;">-</span>
+            <span>SSH connections</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+        <strong>Tip:</strong> Processes must be restarted manually after restoration
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    tmux-resurrect saves the static aspects of your session: the directory structure, window/pane organization, and even the visible text in your panes (if capture-pane-contents is enabled).
+
+    What resurrect cannot save are dynamic elements like running processes. If you had a build running, a server listening, or any long-running command, you'll need to restart it.
+
+    Environment variables are not persisted either, so any session-specific variables you set will need to be re-exported. SSH connections will be closed and need to be re-established.
+
+    The Neovim strategy is special: resurrect can save Neovim session files if you configure the strategy, allowing you to restore open files and marks within vim.
+  </aside>
+</section>
+
+<section>
+  <h2>Resurrect Configuration</h2>
+
+  <pre><code class="language-bash">set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'</code></pre>
+
+  <div style="margin-top: 2rem; text-align: left;">
+    <h4>What These Settings Do:</h4>
+    <ul>
+      <li><code>@resurrect-capture-pane-contents</code>: Saves visible terminal output when saving a session</li>
+      <li><code>@resurrect-strategy-nvim</code>: Uses session-based restoration for Neovim instead of reopening empty instances</li>
+    </ul>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5rem;">
+    <strong>Tip:</strong> The Neovim strategy is essential - without it, <code>tmux-resurrect</code> will spawn new empty Neovim windows instead of restoring your actual editing sessions.
+  </div>
+
+  <aside class="notes">
+    These two settings configure how tmux-resurrect handles session preservation. The pane-contents setting captures what's visible on screen, useful for recovering recent terminal output. The Neovim strategy is critical: it tells tmux-resurrect to save Neovim's session file (not just the process) and restore it properly on resurrection. Without this setting, you'd get blank Neovim windows that require manual recovery.
+  </aside>
+</section>
+
+<section>
+  <h2>tmux-continuum</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; align-items: start; margin-top: 1.5em;">
+    <!-- Left: What continuum adds -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #2196f3;">Built on Resurrect</h3>
+      <p style="font-size: 0.9em; line-height: 1.6; margin-bottom: 1.2em;">
+        While <code>tmux-resurrect</code> requires manual saves and restores, <code>tmux-continuum</code> automates the entire process. Set it once and forget about session persistence.
+      </p>
+
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; margin-bottom: 1.2em;">
+        <div style="font-size: 0.85em; color: #888; margin-bottom: 0.8em;">Key Features</div>
+        <div style="font-size: 0.9em; line-height: 1.8;">
+          <div style="margin-bottom: 0.6em;">
+            <strong style="color: #4caf50;">Auto-save</strong>
+            <div style="font-size: 0.85em; color: #aaa;">Every 15 minutes</div>
+          </div>
+          <div>
+            <strong style="color: #4caf50;">Auto-restore</strong>
+            <div style="font-size: 0.85em; color: #aaa;">On first tmux start</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Configuration -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #9ece6a;">Configuration</h3>
+      <p style="font-size: 0.9em; margin-bottom: 1em; color: #ccc;">
+        Add to <code>~/.tmux.conf.local</code>:
+      </p>
+
+      <pre style="margin-bottom: 1.5em;"><code class="language-bash"># Enable auto-restore on tmux start
+set -g @continuum-restore 'on'
+
+# Set save interval (in minutes)
+set -g @continuum-save-interval '15'</code></pre>
+
+      <div class="tip">
+        <strong>Tip:</strong> This is truly "set and forget" - continuum runs in the background without requiring manual intervention.
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    tmux-continuum is an optional layer on top of tmux-resurrect that completely automates session persistence. While resurrect lets you manually save and restore sessions with prefix + Ctrl-s and prefix + Ctrl-r, continuum handles this automatically.
+
+    The plugin saves your entire tmux environment every 15 minutes in the background. When tmux starts, it automatically restores the last saved state. This means your sessions survive system reboots, SSH disconnections, and terminal closures completely transparently.
+  </aside>
+</section>
+
+<section>
+  <h2>Save and Quit</h2>
+
+  <table style="margin-top: 1.5em;">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="key">prefix</span> + <span class="key">Q</span></td>
+        <td>Save session and quit</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; margin-top: 2em; align-items: start;">
+    <!-- Left: Workflow explanation -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #7aa2f7;">Workflow</h3>
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; font-size: 0.9em; line-height: 1.8;">
+        <div style="margin-bottom: 1em;">
+          <div style="color: #9ece6a; font-weight: bold; margin-bottom: 0.5em;">What It Does</div>
+          <ul style="margin: 0; padding-left: 1.2em;">
+            <li>Saves session state automatically</li>
+            <li>Preserves all windows, panes, directories</li>
+            <li>Cleanly exits tmux server</li>
+          </ul>
+        </div>
+        <div style="margin-top: 1em; padding: 0.8em; background: rgba(33, 150, 243, 0.1); border-left: 3px solid #2196f3; border-radius: 4px;">
+          <div style="color: #2196f3; font-weight: bold; margin-bottom: 0.3em;">Equivalent To:</div>
+          <div style="font-size: 0.85em; color: #ccc;">
+            <code style="display: block; margin-bottom: 0.3em;">prefix + Ctrl-s</code>
+            <div style="color: #888;">then</div>
+            <code style="display: block; margin-top: 0.3em;">tmux kill-server</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: When to use -->
+    <div>
+      <h3 style="font-size: 1.1em; margin-bottom: 1em; color: #7aa2f7;">When to Use</h3>
+      <div style="background: #1a1a1a; padding: 1.2em; border-radius: 8px; border: 1px solid #444; font-size: 0.9em; line-height: 1.8;">
+        <ul style="margin: 0; padding-left: 1.2em;">
+          <li style="margin-bottom: 0.8em;">
+            <strong style="color: #f7768e;">End of workday</strong>
+            <div style="color: #888; font-size: 0.9em; margin-top: 0.2em;">Save your session before leaving</div>
+          </li>
+          <li style="margin-bottom: 0.8em;">
+            <strong style="color: #f7768e;">Before system reboot</strong>
+            <div style="color: #888; font-size: 0.9em; margin-top: 0.2em;">Preserve state across restart</div>
+          </li>
+          <li>
+            <strong style="color: #f7768e;">Clean exit</strong>
+            <div style="color: #888; font-size: 0.9em; margin-top: 0.2em;">Instead of killing server manually</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    The save-and-quit binding (prefix + Q) is a convenience that combines two operations: saving the session state with prefix + Ctrl-s, then immediately terminating the tmux server.
+
+    This is particularly useful at the end of a workday when you want to ensure your session is saved and properly closed. It's also helpful before system reboots.
+
+    This is a custom binding defined in the config - not a standard tmux binding.
+  </aside>
+</section>
+
+<section>
+  <h2>Full Restart Workflow</h2>
+
+  <div style="display: grid; grid-template-columns: 1fr; gap: 2em; margin-top: 2em;">
+    <!-- Step-by-step workflow -->
+    <div style="font-size: 1.1em;">
+      <ol style="list-style-position: outside; padding-left: 2em; line-height: 2.2;">
+        <li style="margin-bottom: 1.5em;">
+          <strong>Save:</strong> <span class="key">prefix + Ctrl-s</span>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            (or let continuum auto-save every 15 min)
+          </div>
+        </li>
+
+        <li style="margin-bottom: 1.5em;">
+          <strong>Kill tmux:</strong> <code>tmux kill-server</code>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            Terminates all sessions and processes
+          </div>
+        </li>
+
+        <li style="margin-bottom: 1.5em;">
+          <strong>Start tmux:</strong> <code>tmux</code>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            Launch a fresh tmux session
+          </div>
+        </li>
+
+        <li style="margin-bottom: 0;">
+          <strong>Auto-restore:</strong>
+          <div style="font-size: 0.85em; color: #888; margin-top: 0.3em; margin-left: 1.5em;">
+            Continuum automatically restores sessions (or manually: <span class="key">prefix + Ctrl-r</span>)
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Visual flow diagram -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 1.5em; margin-top: 1.5em; flex-wrap: wrap;">
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #4caf50; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Save</div>
+        <div style="font-size: 1.1em; color: #4caf50; margin-top: 0.3em;">1</div>
+      </div>
+
+      <div style="color: #666; font-size: 1.5em;">-></div>
+
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #f44336; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Kill</div>
+        <div style="font-size: 1.1em; color: #f44336; margin-top: 0.3em;">2</div>
+      </div>
+
+      <div style="color: #666; font-size: 1.5em;">-></div>
+
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #2196f3; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Start</div>
+        <div style="font-size: 1.1em; color: #2196f3; margin-top: 0.3em;">3</div>
+      </div>
+
+      <div style="color: #666; font-size: 1.5em;">-></div>
+
+      <div style="background: #2d2d2d; padding: 1em 1.5em; border-radius: 6px; border-left: 4px solid #4caf50; text-align: center; min-width: 100px;">
+        <div style="font-size: 0.85em; color: #888;">Restore</div>
+        <div style="font-size: 1.1em; color: #4caf50; margin-top: 0.3em;">4</div>
+      </div>
+    </div>
+
+    <!-- Key highlight: Step 4 is automatic -->
+    <div class="tip" style="margin-top: 1.5em;">
+      <strong>Tip:</strong> Step 4 happens automatically thanks to continuum! Your sessions are restored exactly as they were when you start tmux again.
+    </div>
+  </div>
+
+  <aside class="notes">
+    This is the full restart workflow for tmux demonstrating session persistence.
+
+    Walk through each step:
+    1. Save the session manually with prefix + Ctrl-s. If you have continuum enabled (which saves every 15 minutes), you might not need to do this manually.
+    2. Kill the entire tmux server with tmux kill-server. This terminates all sessions and their associated processes.
+    3. Start a fresh tmux instance with the tmux command from your shell.
+    4. Continuum automatically restores all your sessions from the last saved state. All your windows, panes, working directories, and even Neovim sessions are back exactly as they were.
+  </aside>
+</section>
+
+<section>
+  <h2>Troubleshooting</h2>
+
+  <div style="margin: 1.5em auto; padding: 1.2em; background: #1a1a1a; border-left: 4px solid #2196F3; text-align: left; max-width: 600px; border-radius: 4px;">
+    <strong>Session Save Location:</strong>
+    <p style="font-family: monospace; margin: 0.8em 0; font-size: 0.95em;">~/.tmux/resurrect/</p>
+    <p style="font-size: 0.85em; color: #888; margin: 0.5em 0;">Sessions are saved after each manual save or auto-save</p>
+  </div>
+
+  <h3 style="margin-top: 1.5em;">Finding Your Sessions</h3>
+
+  <p><strong>The <code>last</code> symlink:</strong> Always points to your most recent session save</p>
+
+  <p>Check saved sessions with:</p>
+  <pre><code class="language-bash">ls ~/.tmux/resurrect/</code></pre>
+
+  <div class="tip" style="margin-top: 1.5em;">
+    <strong>Tip:</strong> If restore fails, check the file timestamps with <code>ls -lt ~/.tmux/resurrect/</code> to verify which save file is most recent and has content.
+  </div>
+
+  <aside class="notes">
+    Session files are stored in the resurrect directory and persist between tmux restarts. Each save includes full pane content, window layout, and history.
+
+    If a restore doesn't work as expected, check the file timestamps first. Sometimes old corrupt files can remain - remove them manually if needed.
+
+    Troubleshooting checklist:
+    - Check if continuum is enabled: tmux show-options -g | grep continuum
+    - Verify plugins are installed: ls ~/.tmux/plugins/
+    - Check resurrect directory exists: ls -la ~/.tmux/resurrect/
+  </aside>
+</section>
+
+<section>
+  <h2>Exercise 7: Persistence</h2>
+
+  <div class="exercise" style="margin-top: 1.5em;">
+    <ol style="font-size: 0.95em; line-height: 1.8;">
+      <li>Create a few windows and panes
+        <ul style="margin-top: 0.5em; margin-left: 1.5em;">
+          <li><span class="key">prefix + c</span> to create windows</li>
+          <li><span class="key">prefix + |</span> and <span class="key">prefix + -</span> to create panes</li>
+        </ul>
+      </li>
+      <li>Save manually: <span class="key">prefix + Ctrl-s</span></li>
+      <li>Kill tmux: <code>tmux kill-server</code></li>
+      <li>Start fresh: <code>tmux</code></li>
+      <li>Verify auto-restore (or manually: <span class="key">prefix + Ctrl-r</span>)</li>
+      <li>Check saved files: <code>ls ~/.tmux/resurrect/</code></li>
+    </ol>
+  </div>
+
+  <div class="tip" style="margin-top: 1.5em; font-size: 0.9em;">
+    <strong>Tip:</strong> Look for the <code>last</code> symlink in the resurrect directory - it points to your most recent save.
+  </div>
+
+  <aside class="notes">
+    This exercise demonstrates the core value proposition of tmux-resurrect and tmux-continuum: session persistence across server restarts.
+
+    Expected behavior at each step:
+    1. Creating structure establishes what will be saved (windows, panes, layouts, directories)
+    2. Manual save triggers tmux-resurrect to write session state to disk
+    3. Killing the server terminates all sessions and processes
+    4. Starting fresh tmux normally would start with empty session
+    5. Auto-restore (or manual Ctrl-r) restores the saved state
+    6. The resurrect directory contains timestamped files with session snapshots
+
+    Key insight: This demonstrates the difference between detaching (session keeps running) and killing (requires restore).
+  </aside>
+</section>
