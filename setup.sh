@@ -41,6 +41,7 @@ backup_if_exists() {
 create_tmux_directories() {
     info "Creating tmux directories..."
     mkdir -p ~/.tmux/plugins
+    mkdir -p ~/.config/tmux-which-key
 }
 
 # Install Oh My Tmux
@@ -87,6 +88,17 @@ install_tmux_config() {
     else
         cp "$SCRIPT_DIR/tmux.conf.local" ~/.tmux.conf.local
         info "  Copied: ~/.tmux.conf.local"
+    fi
+
+    # Install tmux-which-key config
+    local whichkey_config="$HOME/.config/tmux-which-key/config.yaml"
+    backup_if_exists "$whichkey_config"
+    if [[ "$use_symlink" == "true" ]]; then
+        ln -sf "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
+        info "  Linked: $whichkey_config"
+    else
+        cp "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
+        info "  Copied: $whichkey_config"
     fi
 }
 

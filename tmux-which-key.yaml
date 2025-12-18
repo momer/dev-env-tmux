@@ -1,0 +1,240 @@
+# tmux-which-key configuration
+# Displays keybinding hints in a popup menu
+
+command_alias:
+  fzf-window: run-shell -b '~/.tmux/plugins/tmux-fzf/scripts/window.sh switch'
+  fzf-menu: run-shell -b '~/.tmux/plugins/tmux-fzf/scripts/main.sh'
+  resurrect-save: run-shell '~/.tmux/plugins/tmux-resurrect/scripts/save.sh'
+  resurrect-restore: run-shell '~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
+
+keybindings:
+  # -------------------------------------------------------------------------
+  # Panes
+  # -------------------------------------------------------------------------
+  - name: Panes
+    key: w
+    menu:
+      - name: Split horizontal
+        key: "|"
+        command: split-window -h -c "#{pane_current_path}"
+      - name: Split vertical
+        key: "-"
+        command: split-window -v -c "#{pane_current_path}"
+      - separator: true
+      - name: Navigate left
+        key: h
+        command: select-pane -L
+      - name: Navigate down
+        key: j
+        command: select-pane -D
+      - name: Navigate up
+        key: k
+        command: select-pane -U
+      - name: Navigate right
+        key: l
+        command: select-pane -R
+      - separator: true
+      - name: Resize left
+        key: H
+        command: resize-pane -L 2
+      - name: Resize down
+        key: J
+        command: resize-pane -D 2
+      - name: Resize up
+        key: K
+        command: resize-pane -U 2
+      - name: Resize right
+        key: L
+        command: resize-pane -R 2
+      - separator: true
+      - name: Maximize/restore
+        key: "+"
+        command: resize-pane -Z
+      - name: Rotate layout
+        key: "\\"
+        command: next-layout
+      - separator: true
+      - name: Join pane (vertical)
+        key: g
+        command: "run-shell 'tmux list-windows -F \"#{window_index}: #{window_name}\" | fzf-tmux -p -w 50% -h 40% | cut -d: -f1 | xargs -I{} tmux join-pane -v -s :{}'"
+      - name: Join pane (horizontal)
+        key: G
+        command: "run-shell 'tmux list-windows -F \"#{window_index}: #{window_name}\" | fzf-tmux -p -w 50% -h 40% | cut -d: -f1 | xargs -I{} tmux join-pane -h -s :{}'"
+      - name: Kill pane
+        key: x
+        command: kill-pane
+
+  # -------------------------------------------------------------------------
+  # Windows
+  # -------------------------------------------------------------------------
+  - name: Windows
+    key: W
+    menu:
+      - name: New window
+        key: c
+        command: new-window -c "#{pane_current_path}"
+      - name: Next window
+        key: "n"
+        command: next-window
+      - name: Previous window
+        key: p
+        command: previous-window
+      - name: Last window
+        key: Tab
+        command: last-window
+      - separator: true
+      - name: Switch (fzf)
+        key: s
+        command: "{{fzf-window}}"
+      - name: Rename window
+        key: ","
+        command: command-prompt -I "#W" "rename-window '%%'"
+      - name: Kill window
+        key: X
+        command: kill-window
+
+  # -------------------------------------------------------------------------
+  # Sessions
+  # -------------------------------------------------------------------------
+  - name: Sessions
+    key: S
+    menu:
+      - name: New session
+        key: C-n
+        command: command-prompt -p "Session name:" "new-session -s '%%'"
+      - name: Switch session
+        key: ")"
+        command: switch-client -n
+      - name: Previous session
+        key: "("
+        command: switch-client -p
+      - separator: true
+      - name: Save session
+        key: C-s
+        command: "{{resurrect-save}}"
+      - name: Restore session
+        key: C-r
+        command: "{{resurrect-restore}}"
+      - name: Save & quit
+        key: Q
+        command: "run-shell '~/.tmux/plugins/tmux-resurrect/scripts/save.sh' ; kill-session"
+      - separator: true
+      - name: Detach
+        key: d
+        command: detach-client
+      - name: Kill session
+        key: "$"
+        command: kill-session
+
+  # -------------------------------------------------------------------------
+  # Copy mode
+  # -------------------------------------------------------------------------
+  - name: Copy mode
+    key: "["
+    menu:
+      - name: Enter copy mode
+        key: "["
+        command: copy-mode
+      - name: Paste buffer
+        key: "]"
+        command: paste-buffer
+      - separator: true
+      - name: List buffers
+        key: "#"
+        command: list-buffers
+      - name: Choose buffer
+        key: "="
+        command: choose-buffer
+
+  # -------------------------------------------------------------------------
+  # Fuzzy finder (fzf)
+  # -------------------------------------------------------------------------
+  - name: Fuzzy finder
+    key: f
+    menu:
+      - name: Main menu
+        key: f
+        command: "{{fzf-menu}}"
+      - name: Switch window
+        key: s
+        command: "{{fzf-window}}"
+
+  # -------------------------------------------------------------------------
+  # Quick actions (top-level)
+  # -------------------------------------------------------------------------
+  - name: Split horizontal
+    key: "|"
+    command: split-window -h -c "#{pane_current_path}"
+
+  - name: Kill pane
+    key: x
+    command: kill-pane
+
+  - name: Kill window
+    key: X
+    command: kill-window
+
+  - name: Next window
+    key: "n"
+    command: next-window
+
+  - name: Previous window
+    key: p
+    command: previous-window
+
+  - name: Switch window (fzf)
+    key: s
+    command: "{{fzf-window}}"
+
+  - name: Send C-a
+    key: a
+    command: send-keys C-a
+
+  - name: Rotate layout
+    key: "\\"
+    command: next-layout
+
+  - name: Join pane (vertical)
+    key: g
+    command: "run-shell 'tmux list-windows -F \"#{window_index}: #{window_name}\" | fzf-tmux -p -w 50% -h 40% | cut -d: -f1 | xargs -I{} tmux join-pane -v -s :{}'"
+
+  - name: Join pane (horizontal)
+    key: G
+    command: "run-shell 'tmux list-windows -F \"#{window_index}: #{window_name}\" | fzf-tmux -p -w 50% -h 40% | cut -d: -f1 | xargs -I{} tmux join-pane -h -s :{}'"
+
+  - name: Save & quit
+    key: Q
+    command: "run-shell '~/.tmux/plugins/tmux-resurrect/scripts/save.sh' ; kill-session"
+
+  # -------------------------------------------------------------------------
+  # Config & plugins
+  # -------------------------------------------------------------------------
+  - name: Config
+    key: C
+    menu:
+      - name: Edit config
+        key: e
+        command: new-window -n "config" "sh -c '${EDITOR:-vim} ~/.tmux.conf.local && tmux source ~/.tmux.conf && tmux display \"Config reloaded\"'"
+      - name: Reload config
+        key: r
+        command: source-file ~/.tmux.conf \; display "Config reloaded"
+      - name: Toggle mouse
+        key: m
+        command: set mouse
+
+  - name: Plugins
+    key: P
+    menu:
+      - name: Install plugins
+        key: I
+        command: run-shell '~/.tmux/plugins/tpm/bin/install_plugins'
+      - name: Update plugins
+        key: U
+        command: run-shell '~/.tmux/plugins/tpm/bin/update_plugins all'
+      - name: Clean plugins
+        key: C
+        command: run-shell '~/.tmux/plugins/tpm/bin/clean_plugins'
+
+  - name: Reload config
+    key: r
+    command: source-file ~/.tmux.conf \; display "Config reloaded"

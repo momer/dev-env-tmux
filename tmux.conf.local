@@ -57,6 +57,13 @@ bind s run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/window.sh switch"
 # Send C-a to shell for beginning of line (prefix + a)
 bind a send-keys C-a
 
+# Rotate through pane layouts (prefix + \)
+bind \\ next-layout
+
+# Join pane from another window using fzf (prefix + g for vertical, prefix + G for horizontal)
+bind g run-shell 'tmux list-windows -F "#{window_index}: #{window_name}" | fzf-tmux -p -w 50% -h 40% | cut -d: -f1 | xargs -I{} tmux join-pane -v -s :{}'
+bind G run-shell 'tmux list-windows -F "#{window_index}: #{window_name}" | fzf-tmux -p -w 50% -h 40% | cut -d: -f1 | xargs -I{} tmux join-pane -h -s :{}'
+
 # -----------------------------------------------------------------------------
 # Copy Mode (prefix + [) - Vim Navigation
 # -----------------------------------------------------------------------------
@@ -94,6 +101,10 @@ set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'sainnhe/tmux-fzf'
+set -g @plugin 'alexwforsythe/tmux-which-key'
+
+# tmux-which-key settings
+set -g @tmux-which-key-xdg-enable 1
 
 # tmux-fzf settings
 TMUX_FZF_LAUNCH_KEY="f"
