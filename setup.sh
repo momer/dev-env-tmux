@@ -75,10 +75,20 @@ install_tmux_config() {
 
     info "Installing tmux configuration..."
 
-    # Link oh-my-tmux's .tmux.conf
+    # Create wrapper ~/.tmux.conf that sources oh-my-tmux and .local
+    # This allows tpm to detect the source-file directive for .local
     backup_if_exists ~/.tmux.conf
-    ln -sf "$OH_MY_TMUX_DIR/.tmux.conf" ~/.tmux.conf
-    info "  Linked: ~/.tmux.conf -> oh-my-tmux"
+    cat > ~/.tmux.conf << 'EOF'
+# Wrapper config - sources oh-my-tmux and local customizations
+# This structure allows tpm to detect plugins in .tmux.conf.local
+
+# Source oh-my-tmux
+source-file ~/.tmux/oh-my-tmux/.tmux.conf
+
+# Source local customizations (tpm detects this for plugin scanning)
+source-file ~/.tmux.conf.local
+EOF
+    info "  Created: ~/.tmux.conf (wrapper)"
 
     # Install local customizations
     backup_if_exists ~/.tmux.conf.local
@@ -107,6 +117,8 @@ install_tmux_plugins() {
     info "Installing tmux plugins..."
     local tpm_path="$HOME/.tmux/plugins/tpm"
     if [[ -d "$tpm_path" ]]; then
+        # Set TMUX_PLUGIN_MANAGER_PATH for tpm (needed when running outside tmux)
+        tmux start-server \; set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins/"
         "$tpm_path/bin/install_plugins"
         info "Plugins installed."
     else
