@@ -75,12 +75,7 @@ install_tmux_config() {
 
     info "Installing tmux configuration..."
 
-    # Link oh-my-tmux's .tmux.conf
-    backup_if_exists ~/.tmux.conf
-    ln -sf "$OH_MY_TMUX_DIR/.tmux.conf" ~/.tmux.conf
-    info "  Linked: ~/.tmux.conf -> oh-my-tmux"
-
-    # Install local customizations
+    # Install local customizations first (needed before plugin install)
     backup_if_exists ~/.tmux.conf.local
     if [[ "$use_symlink" == "true" ]]; then
         ln -sf "$SCRIPT_DIR/tmux.conf.local" ~/.tmux.conf.local
@@ -89,6 +84,16 @@ install_tmux_config() {
         cp "$SCRIPT_DIR/tmux.conf.local" ~/.tmux.conf.local
         info "  Copied: ~/.tmux.conf.local"
     fi
+
+    # Create temporary wrapper for tpm plugin detection
+    # This will be replaced with symlink after plugin install
+    backup_if_exists ~/.tmux.conf
+    cat > ~/.tmux.conf << 'EOF'
+# Temporary wrapper for tpm plugin detection
+source-file ~/.tmux/oh-my-tmux/.tmux.conf
+source-file ~/.tmux.conf.local
+EOF
+    info "  Created: ~/.tmux.conf (temporary for plugin install)"
 
     # Install tmux-which-key config
     local whichkey_config="$HOME/.config/tmux-which-key/config.yaml"
@@ -102,11 +107,27 @@ install_tmux_config() {
     fi
 }
 
+# Finalize tmux config (replace wrapper with symlink or copy)
+finalize_tmux_config() {
+    local use_symlink="$1"
+
+    info "Finalizing tmux configuration..."
+    if [[ "$use_symlink" == "true" ]]; then
+        ln -sf "$OH_MY_TMUX_DIR/.tmux.conf" ~/.tmux.conf
+        info "  Linked: ~/.tmux.conf -> oh-my-tmux"
+    else
+        cp "$OH_MY_TMUX_DIR/.tmux.conf" ~/.tmux.conf
+        info "  Copied: ~/.tmux.conf"
+    fi
+}
+
 # Install tmux plugins via tpm
 install_tmux_plugins() {
     info "Installing tmux plugins..."
     local tpm_path="$HOME/.tmux/plugins/tpm"
     if [[ -d "$tpm_path" ]]; then
+        # Set TMUX_PLUGIN_MANAGER_PATH for tpm (needed when running outside tmux)
+        tmux start-server \; set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins/"
         "$tpm_path/bin/install_plugins"
         info "Plugins installed."
     else
@@ -180,6 +201,9 @@ main() {
         warn "Skipping plugin installation."
         warn "Run 'tmux' then press prefix + I to install plugins manually."
     fi
+
+    # Replace temporary wrapper with proper symlink/copy to oh-my-tmux
+    finalize_tmux_config "$use_symlink"
 
     echo ""
     info "Setup complete!"
