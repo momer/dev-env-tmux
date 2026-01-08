@@ -3,10 +3,10 @@
 # Usage:
 #   make install          - Full setup (tmux config + dependencies)
 #   make setup            - Install tmux config only
-#   make deps             - Install tmux, fzf, and tpm
+#   make deps             - Install tmux, fzf, tpm, and fonts
 #   make help             - Show all targets
 
-.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-fzf deps-tpm status clean
+.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-fzf deps-tpm deps-fonts status clean
 
 # Default target
 help:
@@ -23,10 +23,11 @@ help:
 	@echo "  make update-oh-my-tmux  Update oh-my-tmux to latest"
 	@echo ""
 	@echo "Dependency targets:"
-	@echo "  make deps             Install all dependencies (tmux + fzf + tpm)"
+	@echo "  make deps             Install all dependencies (tmux + fzf + tpm + fonts)"
 	@echo "  make deps-tmux        Install tmux"
 	@echo "  make deps-fzf         Install fzf (for tmux-fzf plugin)"
 	@echo "  make deps-tpm         Install tmux plugin manager"
+	@echo "  make deps-fonts       Install a Nerd Font (for powerline symbols)"
 	@echo ""
 	@echo "Other targets:"
 	@echo "  make status           Check installation status"
@@ -82,7 +83,7 @@ update-oh-my-tmux:
 	fi
 
 # Install all dependencies
-deps: deps-tmux deps-fzf deps-tpm
+deps: deps-tmux deps-fzf deps-tpm deps-fonts
 	@$(MAKE) status
 
 # Tmux
@@ -96,6 +97,10 @@ deps-fzf:
 # Tmux Plugin Manager
 deps-tpm:
 	./install-dependencies.sh tpm
+
+# Nerd Fonts (for powerline symbols)
+deps-fonts:
+	./install-dependencies.sh fonts
 
 # Check status
 status:
