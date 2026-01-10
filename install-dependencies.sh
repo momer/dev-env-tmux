@@ -329,7 +329,8 @@ install_nerd_font() {
                 echo "  1. Open Downloads folder in Windows Explorer"
                 echo "  2. Extract ${font_zip}.zip"
                 echo "  3. Select all .ttf files -> Right-click -> Install"
-                echo "  4. Configure your terminal to use the font:"
+                echo "  4. Configure your terminal to use the 'Mono' variant of the font"
+                echo "     (e.g., 'Hack Nerd Font Mono' not 'Hack Nerd Font')"
                 echo ""
                 echo "     Windows Terminal:"
                 echo "       Settings -> Profile -> Appearance -> Font face"
@@ -358,7 +359,8 @@ install_nerd_font() {
         if [[ ! "$install_another" =~ ^[Yy]$ ]]; then
             info "Skipping font installation."
             echo ""
-            echo "Remember to configure your terminal to use the Nerd Font!"
+            echo "Remember to configure your terminal to use the 'Mono' variant of the Nerd Font!"
+            echo "(e.g., 'Hack Nerd Font Mono' not 'Hack Nerd Font')"
             prompt_separator_style "true"
             return
         fi
@@ -434,7 +436,8 @@ install_nerd_font() {
         fi
 
         echo ""
-        echo "Next step: Configure your terminal to use '$font_name'"
+        echo "Next step: Configure your terminal to use the 'Mono' variant of '$font_name'"
+        echo "           (e.g., 'Hack Nerd Font Mono' not 'Hack Nerd Font')"
         echo ""
         echo "Terminal configuration:"
         if is_macos; then
