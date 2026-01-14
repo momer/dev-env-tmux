@@ -48,6 +48,15 @@ check_cmd() {
     command -v "$1" >/dev/null 2>&1
 }
 
+# Portable in-place sed (macOS requires '' after -i)
+sed_i() {
+    if is_macos; then
+        sed -i '' "$@"
+    else
+        sed -i "$@"
+    fi
+}
+
 # Install tmux
 install_tmux() {
     info "Installing tmux..."
@@ -231,21 +240,21 @@ configure_separators() {
 
     if [[ "$style" == "powerline" ]]; then
         # Uncomment powerline separator lines
-        sed -i "s/^# tmux_conf_theme_left_separator_main/tmux_conf_theme_left_separator_main/" "$config_file"
-        sed -i "s/^# tmux_conf_theme_left_separator_sub/tmux_conf_theme_left_separator_sub/" "$config_file"
-        sed -i "s/^# tmux_conf_theme_right_separator_main/tmux_conf_theme_right_separator_main/" "$config_file"
-        sed -i "s/^# tmux_conf_theme_right_separator_sub/tmux_conf_theme_right_separator_sub/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_left_separator_main/tmux_conf_theme_left_separator_main/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_left_separator_sub/tmux_conf_theme_left_separator_sub/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_right_separator_main/tmux_conf_theme_right_separator_main/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_right_separator_sub/tmux_conf_theme_right_separator_sub/" "$config_file"
     else
         # Set ASCII separators (empty = oh-my-tmux default squares, or use simple chars)
-        sed -i "s/^# tmux_conf_theme_left_separator_main=.*/tmux_conf_theme_left_separator_main=''/" "$config_file"
-        sed -i "s/^# tmux_conf_theme_left_separator_sub=.*/tmux_conf_theme_left_separator_sub='|'/" "$config_file"
-        sed -i "s/^# tmux_conf_theme_right_separator_main=.*/tmux_conf_theme_right_separator_main=''/" "$config_file"
-        sed -i "s/^# tmux_conf_theme_right_separator_sub=.*/tmux_conf_theme_right_separator_sub='|'/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_left_separator_main=.*/tmux_conf_theme_left_separator_main=''/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_left_separator_sub=.*/tmux_conf_theme_left_separator_sub='|'/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_right_separator_main=.*/tmux_conf_theme_right_separator_main=''/" "$config_file"
+        sed_i "s/^# tmux_conf_theme_right_separator_sub=.*/tmux_conf_theme_right_separator_sub='|'/" "$config_file"
         # Also handle if already uncommented
-        sed -i "s/^tmux_conf_theme_left_separator_main=.*/tmux_conf_theme_left_separator_main=''/" "$config_file"
-        sed -i "s/^tmux_conf_theme_left_separator_sub=.*/tmux_conf_theme_left_separator_sub='|'/" "$config_file"
-        sed -i "s/^tmux_conf_theme_right_separator_main=.*/tmux_conf_theme_right_separator_main=''/" "$config_file"
-        sed -i "s/^tmux_conf_theme_right_separator_sub=.*/tmux_conf_theme_right_separator_sub='|'/" "$config_file"
+        sed_i "s/^tmux_conf_theme_left_separator_main=.*/tmux_conf_theme_left_separator_main=''/" "$config_file"
+        sed_i "s/^tmux_conf_theme_left_separator_sub=.*/tmux_conf_theme_left_separator_sub='|'/" "$config_file"
+        sed_i "s/^tmux_conf_theme_right_separator_main=.*/tmux_conf_theme_right_separator_main=''/" "$config_file"
+        sed_i "s/^tmux_conf_theme_right_separator_sub=.*/tmux_conf_theme_right_separator_sub='|'/" "$config_file"
     fi
 
     info "Updated ~/.tmux.conf.local"
