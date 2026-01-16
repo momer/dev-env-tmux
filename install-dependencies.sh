@@ -297,7 +297,7 @@ install_nerd_font() {
             1)
                 # Get Windows username and Downloads path
                 local win_user
-                win_user=$(cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r')
+                win_user=$(/mnt/c/Windows/System32/cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r')
                 local downloads_path="/mnt/c/Users/${win_user}/Downloads"
                 if [[ ! -d "$downloads_path" ]]; then
                     warn "Could not find Windows Downloads folder, using current directory"
@@ -310,14 +310,16 @@ install_nerd_font() {
                 echo "  2) JetBrains Mono        - Modern, readable"
                 echo "  3) Fira Code Nerd Font   - Ligatures, popular"
                 echo "  4) Meslo LG Nerd Font    - Apple-style"
+                echo "  5) CaskaydiaCove         - Cascadia Code (Microsoft, best Windows compat)"
                 echo ""
-                read -p "Select font [1-4]: " font_choice
+                read -p "Select font [1-5]: " font_choice
                 local font_zip=""
                 case "$font_choice" in
                     1) font_zip="Hack" ;;
                     2) font_zip="JetBrainsMono" ;;
                     3) font_zip="FiraCode" ;;
                     4) font_zip="Meslo" ;;
+                    5) font_zip="CascadiaCode" ;;
                     *) warn "Invalid choice."; return ;;
                 esac
                 local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_zip}.zip"
@@ -373,9 +375,10 @@ install_nerd_font() {
     echo "  3) Fira Code Nerd Font   - Ligatures, popular"
     echo "  4) Meslo LG Nerd Font    - Apple-style"
     echo "  5) Source Code Pro       - Adobe's coding font"
-    echo "  6) Skip"
+    echo "  6) CaskaydiaCove         - Cascadia Code (Microsoft, best Windows compat)"
+    echo "  7) Skip"
     echo ""
-    read -p "Select option [1-6]: " choice
+    read -p "Select option [1-7]: " choice
 
     local font_cask=""
     local font_zip=""
@@ -407,6 +410,11 @@ install_nerd_font() {
             font_name="SauceCodePro Nerd Font"
             ;;
         6)
+            font_cask="font-caskaydia-cove-nerd-font"
+            font_zip="CascadiaCode"
+            font_name="CaskaydiaCove Nerd Font"
+            ;;
+        7)
             info "Skipping font installation."
             prompt_separator_style "false"
             return
