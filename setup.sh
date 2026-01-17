@@ -41,6 +41,7 @@ backup_if_exists() {
 create_tmux_directories() {
     info "Creating tmux directories..."
     mkdir -p ~/.tmux/plugins
+    mkdir -p ~/.tmux/scripts
     mkdir -p ~/.config/tmux-which-key
 }
 
@@ -104,6 +105,13 @@ EOF
     else
         cp "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
         info "  Copied: $whichkey_config"
+    fi
+
+    # Install custom scripts
+    if [[ -d "$SCRIPT_DIR/scripts" ]]; then
+        info "  Installing scripts..."
+        cp "$SCRIPT_DIR/scripts/"*.sh ~/.tmux/scripts/ 2>/dev/null || true
+        chmod +x ~/.tmux/scripts/*.sh 2>/dev/null || true
     fi
 }
 
