@@ -61,8 +61,8 @@ bind a send-keys C-a
 bind \\ next-layout
 
 # Move current pane to another window using fzf (prefix + g for vertical, prefix + G for horizontal)
-bind g run-shell 'tmux display-panes -d 0' \; display-popup -w 90% -h 80% -E 'cur=$(tmux display-message -p "#{window_index}"); tmux list-windows -F "#{window_index}: #{window_name}" | fzf -d: --preview="~/.tmux/scripts/preview-window-panes.sh {1}" --preview-window=down,60% --bind="ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up,ctrl-j:down,ctrl-k:up" | cut -d: -f1 | xargs -I{} sh -c "tmux join-pane -v -t :{} && tmux select-window -t :$cur"'
-bind G run-shell 'tmux display-panes -d 0' \; display-popup -w 90% -h 80% -E 'cur=$(tmux display-message -p "#{window_index}"); tmux list-windows -F "#{window_index}: #{window_name}" | fzf -d: --preview="~/.tmux/scripts/preview-window-panes.sh {1}" --preview-window=down,60% --bind="ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up,ctrl-j:down,ctrl-k:up" | cut -d: -f1 | xargs -I{} sh -c "tmux join-pane -h -t :{} && tmux select-window -t :$cur"'
+bind g run-shell 'tmux display-panes -d 0' \; display-popup -w 90% -h 80% -E '~/.tmux/scripts/move-pane-to-window.sh v'
+bind G run-shell 'tmux display-panes -d 0' \; display-popup -w 90% -h 80% -E '~/.tmux/scripts/move-pane-to-window.sh h'
 
 # -----------------------------------------------------------------------------
 # Copy Mode (prefix + [) - Vim Navigation
