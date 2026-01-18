@@ -9,8 +9,9 @@ target_session="${2:-$(tmux display-message -p '#{session_name}')}"
 cur_session=$(tmux display-message -p "#{session_name}")
 cur_win=$(tmux display-message -p "#{window_index}")
 
-# Build window list with session selection option at top
+# Options for session management
 select_session_opt="[Select Session...]"
+new_session_opt="[New Session...]"
 
 show_window_picker() {
   local session="$1"
@@ -25,10 +26,11 @@ show_window_picker() {
   windows=$(tmux list-windows -t "$session" -F "#{window_index}: #{window_name}" | \
     if [ -n "$exclude_win" ]; then grep -v "^$exclude_win:"; else cat; fi)
 
-  # Add session selector option at top with separator
+  # Add session options at bottom with separator
   echo "$windows"
   echo ""
   echo "$select_session_opt"
+  echo "$new_session_opt"
 }
 
 # Show session picker
@@ -57,6 +59,22 @@ while true; do
     if [ -n "$new_session" ]; then
       selected_session="$new_session"
       continue
+    else
+      exit 0
+    fi
+  fi
+
+  # Handle new session creation
+  if [ "$selection" = "$new_session_opt" ]; then
+    session_name=$(echo "" | fzf --print-query --prompt="New session name: " --header="Enter name for new session" | head -1)
+    if [ -n "$session_name" ]; then
+      # Create detached session, move pane there, remove empty initial pane
+      tmux new-session -d -s "$session_name"
+      tmux join-pane -"$direction" -t "$session_name":0
+      # Kill the empty pane that was created with the session (it's now pane 0)
+      tmux kill-pane -t "$session_name":0.0
+      tmux select-window -t "$cur_session":"$cur_win"
+      exit 0
     else
       exit 0
     fi

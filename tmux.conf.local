@@ -60,9 +60,11 @@ bind a send-keys C-a
 # Rotate through pane layouts (prefix + \)
 bind \\ next-layout
 
-# Move current pane to another window using fzf (prefix + g for vertical, prefix + G for horizontal)
+# Move current pane to another window using fzf (prefix + g)
 bind g run-shell 'tmux display-panes -d 0' \; display-popup -w 90% -h 80% -E '~/.tmux/scripts/move-pane-to-window.sh v'
-bind G run-shell 'tmux display-panes -d 0' \; display-popup -w 90% -h 80% -E '~/.tmux/scripts/move-pane-to-window.sh h'
+
+# Move current window to another session using fzf (prefix + G)
+bind G display-popup -w 90% -h 80% -E '~/.tmux/scripts/move-window-to-session.sh'
 
 # -----------------------------------------------------------------------------
 # Copy Mode (prefix + [) - Vim Navigation
