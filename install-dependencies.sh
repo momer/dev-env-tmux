@@ -104,6 +104,30 @@ install_tpm() {
     echo "  2. Press prefix + I (capital i)"
 }
 
+# Install fpp (Facebook PathPicker for prefix+F)
+install_fpp() {
+    info "Installing fpp (Facebook PathPicker)..."
+
+    if check_cmd fpp; then
+        info "fpp is already installed."
+        return
+    fi
+
+    if is_macos && check_cmd brew; then
+        brew install fpp
+    elif check_cmd pip3; then
+        pip3 install --user pathpicker
+    elif check_cmd pip; then
+        pip install --user pathpicker
+    elif is_linux && check_cmd apt; then
+        sudo apt update && sudo apt install -y fpp
+    else
+        warn "No supported installation method found. Install fpp manually:"
+        warn "  pip install pathpicker"
+        warn "  # or: brew install fpp"
+    fi
+}
+
 # Install fzf (required for tmux-fzf plugin)
 install_fzf() {
     info "Installing fzf..."
@@ -491,6 +515,14 @@ check_status() {
     fi
     echo ""
 
+    echo "Fpp:"
+    if check_cmd fpp; then
+        echo "  ✓ fpp (Facebook PathPicker for prefix+F)"
+    else
+        echo "  ✗ fpp (optional, for prefix+F file picker)"
+    fi
+    echo ""
+
     echo "Oh My Tmux:"
     if [[ -d "$HOME/.tmux/oh-my-tmux" ]]; then
         echo "  ✓ oh-my-tmux installed"
@@ -570,6 +602,9 @@ main() {
         fzf)
             install_fzf
             ;;
+        fpp)
+            install_fpp
+            ;;
         fonts|font|nerd-font)
             install_nerd_font
             ;;
@@ -588,11 +623,12 @@ main() {
             check_status
             ;;
         *)
-            echo "Usage: $0 [tmux|fzf|tpm|fonts|status|all]"
+            echo "Usage: $0 [tmux|fzf|fpp|tpm|fonts|status|all]"
             echo ""
             echo "Options:"
             echo "  tmux     Install tmux"
             echo "  fzf      Install fzf (for tmux-fzf plugin)"
+            echo "  fpp      Install fpp (Facebook PathPicker for prefix+F)"
             echo "  tpm      Install tmux plugin manager"
             echo "  fonts    Install a Nerd Font (for powerline symbols)"
             echo "  status   Check installation status"

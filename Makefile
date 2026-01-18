@@ -6,7 +6,7 @@
 #   make deps             - Install tmux, fzf, tpm, and fonts
 #   make help             - Show all targets
 
-.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-fzf deps-tpm deps-fonts status clean
+.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-fzf deps-tpm deps-fonts deps-fpp status clean
 
 # Default target
 help:
@@ -28,6 +28,7 @@ help:
 	@echo "  make deps-fzf         Install fzf (for tmux-fzf plugin)"
 	@echo "  make deps-tpm         Install tmux plugin manager"
 	@echo "  make deps-fonts       Install a Nerd Font (for powerline symbols)"
+	@echo "  make deps-fpp         Install fpp (Facebook PathPicker for prefix+F)"
 	@echo ""
 	@echo "Other targets:"
 	@echo "  make status           Check installation status"
@@ -101,6 +102,10 @@ deps-tpm:
 # Nerd Fonts (for powerline symbols)
 deps-fonts:
 	./install-dependencies.sh fonts
+
+# fpp (Facebook PathPicker for prefix+F)
+deps-fpp:
+	./install-dependencies.sh fpp
 
 # Check status
 status:
