@@ -37,6 +37,13 @@ tmux_conf_theme_clock_style='24'
 # tmux_conf_theme_hostname=true
 
 # -----------------------------------------------------------------------------
+# Timing
+# -----------------------------------------------------------------------------
+
+# Shorter repeat-time (default 500ms) to avoid accidental command triggers
+set -g repeat-time 200
+
+# -----------------------------------------------------------------------------
 # Additional Key Bindings
 # -----------------------------------------------------------------------------
 
@@ -72,6 +79,9 @@ bind G display-popup -w 90% -h 80% -E '~/.tmux/scripts/move-window-to-session.sh
 
 # Use vi mode keys in copy mode
 set-window-option -g mode-keys vi
+
+# Enable OSC 52 clipboard (allows apps like vim to copy to system clipboard)
+set -g set-clipboard on
 
 # Line navigation with j/k
 bind-key -T copy-mode-vi j send-keys -X cursor-down

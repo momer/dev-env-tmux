@@ -42,7 +42,7 @@ create_tmux_directories() {
     info "Creating tmux directories..."
     mkdir -p ~/.tmux/plugins
     mkdir -p ~/.tmux/scripts
-    mkdir -p ~/.config/tmux-which-key
+    mkdir -p ~/.config/tmux/plugins/tmux-which-key
 }
 
 # Install Oh My Tmux
@@ -97,7 +97,7 @@ EOF
     info "  Created: ~/.tmux.conf (temporary for plugin install)"
 
     # Install tmux-which-key config
-    local whichkey_config="$HOME/.config/tmux-which-key/config.yaml"
+    local whichkey_config="$HOME/.config/tmux/plugins/tmux-which-key/config.yaml"
     backup_if_exists "$whichkey_config"
     if [[ "$use_symlink" == "true" ]]; then
         ln -sf "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
