@@ -57,6 +57,83 @@ sed_i() {
     fi
 }
 
+# Install prerequisites (mise + GNU coreutils)
+#
+# Why these are prerequisites:
+#   - python3: tmux-which-key runs build.py to generate its menu. We get python3
+#     via mise (a polyglot runtime manager) so it doesn't depend on system python.
+#   - GNU coreutils: provides a `realpath` that supports `--relative-to`. macOS
+#     ships BSD realpath, which lacks that flag; several tmux plugins (and general
+#     dev tooling) assume the GNU behavior. On Linux this is already the default.
+install_prereqs() {
+    info "Installing prerequisites (mise + GNU coreutils)..."
+
+    # --- mise (provides python3 and other runtimes) ---
+    if check_cmd mise; then
+        info "mise is already installed: $(mise --version 2>/dev/null | head -1)"
+    elif is_macos && check_cmd brew; then
+        brew install mise
+    elif check_cmd curl; then
+        info "Installing mise via official installer (https://mise.run)..."
+        curl -fsSL https://mise.run | sh
+    elif check_cmd wget; then
+        info "Installing mise via official installer (https://mise.run)..."
+        wget -qO- https://mise.run | sh
+    else
+        warn "Could not install mise automatically (need brew, curl, or wget)."
+        warn "  See: https://mise.jdx.dev/getting-started.html"
+    fi
+
+    # Ensure a python3 is available (mise needs activation + an installed runtime)
+    if check_cmd mise && ! check_cmd python3; then
+        info "Installing python via mise..."
+        mise use -g python@latest >/dev/null 2>&1 || \
+            warn "Run 'mise use -g python@latest' once mise is activated."
+    fi
+
+    # --- GNU coreutils (for a --relative-to-capable realpath) ---
+    if is_macos; then
+        if check_cmd brew; then
+            if brew list coreutils >/dev/null 2>&1; then
+                info "GNU coreutils already installed."
+            else
+                brew install coreutils
+            fi
+            local gnubin="$(brew --prefix)/opt/coreutils/libexec/gnubin"
+            if ! realpath --relative-to=/ / >/dev/null 2>&1; then
+                warn "GNU coreutils is installed but the GNU 'realpath' is not on PATH."
+                warn "Add this to your shell profile (~/.zshrc) so tools using"
+                warn "'realpath --relative-to' work, then restart your terminal/tmux:"
+                echo ""
+                echo "    export PATH=\"$gnubin:\$PATH\""
+                echo ""
+            fi
+        else
+            warn "Homebrew not found; cannot install GNU coreutils automatically."
+            warn "  Install Homebrew (https://brew.sh) then re-run, or install coreutils manually."
+        fi
+    else
+        # Linux distros ship GNU coreutils by default.
+        if realpath --relative-to=/ / >/dev/null 2>&1; then
+            info "GNU coreutils already present (realpath --relative-to works)."
+        else
+            warn "GNU realpath with --relative-to not detected; install coreutils via your package manager."
+        fi
+    fi
+
+    # --- mise activation reminder ---
+    if check_cmd mise; then
+        local shell_name; shell_name="$(basename "${SHELL:-zsh}")"
+        if ! check_cmd python3; then
+            warn "mise is installed but not activated in this shell."
+        fi
+        echo ""
+        echo "If not already done, activate mise in your shell profile:"
+        echo "    echo 'eval \"\$(mise activate ${shell_name})\"' >> ~/.${shell_name}rc"
+        echo ""
+    fi
+}
+
 # Install tmux
 install_tmux() {
     info "Installing tmux..."
@@ -499,6 +576,24 @@ check_status() {
     info "Checking tool status..."
     echo ""
 
+    echo "Prerequisites:"
+    if check_cmd mise; then
+        echo "  ✓ mise $(mise --version 2>/dev/null | head -1)"
+    else
+        echo "  ✗ mise (provides python3 for tmux-which-key)"
+    fi
+    if check_cmd python3; then
+        echo "  ✓ python3 ($(python3 --version 2>&1 | cut -d' ' -f2))"
+    else
+        echo "  ✗ python3 (required to build the tmux-which-key menu)"
+    fi
+    if realpath --relative-to=/ / >/dev/null 2>&1; then
+        echo "  ✓ GNU realpath (supports --relative-to)"
+    else
+        echo "  ✗ GNU realpath (BSD realpath lacks --relative-to; install coreutils + add gnubin to PATH)"
+    fi
+    echo ""
+
     echo "Tmux:"
     if check_cmd tmux; then
         echo "  ✓ tmux $(tmux -V | cut -d' ' -f2)"
@@ -593,6 +688,9 @@ main() {
     echo ""
 
     case "${1:-all}" in
+        prereqs|prerequisites)
+            install_prereqs
+            ;;
         tmux)
             install_tmux
             ;;
@@ -612,6 +710,8 @@ main() {
             check_status
             ;;
         all)
+            install_prereqs
+            echo ""
             install_tmux
             echo ""
             install_fzf
@@ -623,9 +723,10 @@ main() {
             check_status
             ;;
         *)
-            echo "Usage: $0 [tmux|fzf|fpp|tpm|fonts|status|all]"
+            echo "Usage: $0 [prereqs|tmux|fzf|fpp|tpm|fonts|status|all]"
             echo ""
             echo "Options:"
+            echo "  prereqs  Install prerequisites (mise + GNU coreutils)"
             echo "  tmux     Install tmux"
             echo "  fzf      Install fzf (for tmux-fzf plugin)"
             echo "  fpp      Install fpp (Facebook PathPicker for prefix+F)"

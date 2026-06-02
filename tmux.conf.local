@@ -119,7 +119,13 @@ set -g @plugin 'sainnhe/tmux-fzf'
 set -g @plugin 'alexwforsythe/tmux-which-key'
 
 # tmux-which-key settings
-set -g @tmux-which-key-xdg-enable 1
+# XDG mode is intentionally disabled: the plugin's XDG path handling relies on
+# GNU `realpath --relative-to`, which macOS's BSD realpath does not support. With
+# XDG off, the plugin reads its config from ~/.tmux/plugins/tmux-which-key/config.yaml
+# (placed by setup.sh) and works on any platform regardless of which realpath is
+# on PATH. The config.yaml lives in the plugin dir but is gitignored upstream, so
+# tpm updates won't clobber it.
+set -g @tmux-which-key-xdg-enable 0
 
 # tmux-fzf settings
 TMUX_FZF_LAUNCH_KEY="f"

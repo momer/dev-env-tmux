@@ -42,7 +42,6 @@ create_tmux_directories() {
     info "Creating tmux directories..."
     mkdir -p ~/.tmux/plugins
     mkdir -p ~/.tmux/scripts
-    mkdir -p ~/.config/tmux/plugins/tmux-which-key
 }
 
 # Install Oh My Tmux
@@ -96,17 +95,6 @@ source-file ~/.tmux.conf.local
 EOF
     info "  Created: ~/.tmux.conf (temporary for plugin install)"
 
-    # Install tmux-which-key config
-    local whichkey_config="$HOME/.config/tmux/plugins/tmux-which-key/config.yaml"
-    backup_if_exists "$whichkey_config"
-    if [[ "$use_symlink" == "true" ]]; then
-        ln -sf "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
-        info "  Linked: $whichkey_config"
-    else
-        cp "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
-        info "  Copied: $whichkey_config"
-    fi
-
     # Install custom scripts
     if [[ -d "$SCRIPT_DIR/scripts" ]]; then
         info "  Installing scripts..."
@@ -141,6 +129,50 @@ install_tmux_plugins() {
     else
         warn "tpm not installed. Skipping plugin installation."
         warn "Run 'make deps-tpm' to install tpm, then 'make plugins'"
+    fi
+}
+
+# Install tmux-which-key config
+#
+# The plugin's XDG mode is disabled (see tmux.conf.local) because it depends on
+# GNU `realpath --relative-to`, which macOS's BSD realpath rejects. With XDG off,
+# the plugin reads config.yaml from its own directory. That directory is managed
+# by tpm, and config.yaml is gitignored upstream, so this must run *after* the
+# plugin is cloned (otherwise the pre-existing file would block tpm's git clone)
+# and the config survives future plugin updates.
+install_whichkey_config() {
+    local use_symlink="$1"
+    local plugin_dir="$HOME/.tmux/plugins/tmux-which-key"
+    local whichkey_config="$plugin_dir/config.yaml"
+
+    info "Installing tmux-which-key config..."
+
+    if [[ ! -d "$plugin_dir" ]]; then
+        warn "tmux-which-key plugin not installed yet; skipping config."
+        warn "After installing plugins (prefix + I or 'make plugins'), run:"
+        warn "  make update-config"
+        return
+    fi
+
+    backup_if_exists "$whichkey_config"
+    if [[ "$use_symlink" == "true" ]]; then
+        ln -sf "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
+        info "  Linked: $whichkey_config"
+    else
+        cp "$SCRIPT_DIR/tmux-which-key.yaml" "$whichkey_config"
+        info "  Copied: $whichkey_config"
+    fi
+
+    # Pre-generate the menu so the binding works immediately, without waiting for
+    # the next tmux start. Best-effort: the plugin also rebuilds on every startup.
+    local build="$plugin_dir/plugin/build.py"
+    local init="$plugin_dir/plugin/init.tmux"
+    if [[ -f "$build" ]] && command -v python3 >/dev/null 2>&1; then
+        if python3 "$build" "$whichkey_config" "$init" >/dev/null 2>&1; then
+            info "  Generated: $init"
+            # Apply to a running server if one exists.
+            tmux source-file "$init" 2>/dev/null || true
+        fi
     fi
 }
 
@@ -209,6 +241,9 @@ main() {
         warn "Skipping plugin installation."
         warn "Run 'tmux' then press prefix + I to install plugins manually."
     fi
+
+    # Install which-key config after plugins so its directory exists (tpm-managed)
+    install_whichkey_config "$use_symlink"
 
     # Replace temporary wrapper with proper symlink/copy to oh-my-tmux
     finalize_tmux_config "$use_symlink"

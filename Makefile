@@ -6,7 +6,7 @@
 #   make deps             - Install tmux, fzf, tpm, and fonts
 #   make help             - Show all targets
 
-.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-tmux deps-fzf deps-tpm deps-fonts deps-fpp status clean
+.PHONY: help install setup setup-symlink setup-minimal update-config plugins update update-oh-my-tmux deps deps-prereqs deps-tmux deps-fzf deps-tpm deps-fonts deps-fpp status clean
 
 # Default target
 help:
@@ -23,7 +23,8 @@ help:
 	@echo "  make update-oh-my-tmux  Update oh-my-tmux to latest"
 	@echo ""
 	@echo "Dependency targets:"
-	@echo "  make deps             Install all dependencies (tmux + fzf + tpm + fonts)"
+	@echo "  make deps             Install all dependencies (prereqs + tmux + fzf + tpm + fonts)"
+	@echo "  make deps-prereqs     Install prerequisites (mise + GNU coreutils)"
 	@echo "  make deps-tmux        Install tmux"
 	@echo "  make deps-fzf         Install fzf (for tmux-fzf plugin)"
 	@echo "  make deps-tpm         Install tmux plugin manager"
@@ -57,6 +58,18 @@ setup-minimal:
 update-config:
 	@cp tmux.conf.local ~/.tmux.conf.local
 	@echo "Updated ~/.tmux.conf.local"
+	@if [ -d ~/.tmux/plugins/tmux-which-key ]; then \
+		cp tmux-which-key.yaml ~/.tmux/plugins/tmux-which-key/config.yaml; \
+		echo "Updated ~/.tmux/plugins/tmux-which-key/config.yaml"; \
+		if command -v python3 >/dev/null 2>&1; then \
+			python3 ~/.tmux/plugins/tmux-which-key/plugin/build.py \
+				~/.tmux/plugins/tmux-which-key/config.yaml \
+				~/.tmux/plugins/tmux-which-key/plugin/init.tmux >/dev/null 2>&1 \
+				&& echo "Rebuilt tmux-which-key menu"; \
+		fi; \
+	else \
+		echo "tmux-which-key not installed; skipping its config (run 'make plugins' first)"; \
+	fi
 	@echo "Run 'tmux source-file ~/.tmux.conf' or prefix + r to reload"
 
 # Install/update tmux plugins via tpm
@@ -84,8 +97,12 @@ update-oh-my-tmux:
 	fi
 
 # Install all dependencies
-deps: deps-tmux deps-fzf deps-tpm deps-fonts
+deps: deps-prereqs deps-tmux deps-fzf deps-tpm deps-fonts
 	@$(MAKE) status
+
+# Prerequisites (mise + GNU coreutils)
+deps-prereqs:
+	./install-dependencies.sh prereqs
 
 # Tmux
 deps-tmux:
